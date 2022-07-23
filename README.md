@@ -1,6 +1,9 @@
-# Play Integrity API Checker
-Get info about your Device Integrity through the Play Intergrity API
+<img src="https://github.com/1nikolas/play-integrity-checker-app/raw/main/app/src/main/ic_launcher-playstore.png" width="96" align="right" />
 
+# Play Integrity API Checker
+
+Get info about your Device Integrity through the Play Intergrity API
+     
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=gr.nikolasspyr.integritycheck)
