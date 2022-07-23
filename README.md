@@ -17,6 +17,7 @@ API_URL=https://my-awsome-server-url.com/
 
 ![](https://user-images.githubusercontent.com/30593419/180609045-fe0da305-24d9-4ffb-a44d-4294a759c787.png)
 
+To set up your Google Cloud project see [here](https://github.com/1nikolas/play-integrity-checker-server#how-to-set-up-google-cloud)
 
 # License
 
