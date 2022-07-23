@@ -8,7 +8,7 @@ Get info about your Device Integrity through the Play Intergrity API
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=gr.nikolasspyr.integritycheck)
 
-# Setup
+## Setup
 In order to run this yourself you'll need:
 1) The [Play Integrity Checker Server](https://github.com/1nikolas/play-integrity-checker-server)
 2) Your server url specified in `local.properties` like this:
@@ -22,7 +22,7 @@ API_URL=https://my-awesome-server-url.com/
 
 To set up your Google Cloud project see [here](https://github.com/1nikolas/play-integrity-checker-server#how-to-set-up-google-cloud)
 
-# License
+## License
 
 MIT License
 
