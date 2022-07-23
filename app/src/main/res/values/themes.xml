@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.PlayIntergrityAPIChecker" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/blueSecondary</item>
+        <item name="colorSecondaryVariant">@color/blueSecondaryAlpha</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor" >?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <!-- 3dot color -->
+        <item name="actionOverflowButtonStyle">@style/Theme.PlayIntergrityAPIChecker.actionButtonOverflow</item>
+    </style>
+
+    <style name="Theme.PlayIntergrityAPIChecker.Dialogs" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorAccent">@color/blueSecondary</item>
+        <item name="colorPrimary">@color/blueSecondary</item>
+    </style>
+
+    <style name="Theme.PlayIntergrityAPIChecker.actionButtonOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:tint">@color/black</item>
+    </style>
+</resources>

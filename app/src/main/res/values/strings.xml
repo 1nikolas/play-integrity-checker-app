@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name" translatable="false">Play Intergrity API Checker</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="check">Check</string>
+    <string name="app_name_short" translatable="false">Integrity Checker</string>
+    <string name="licenses">Licenses</string>
+    <string name="github" translatable="false">Github</string>
+    <string name="about_text">Made by: Nikolas Spiridakis\nVersion: {name} ({code})</string>
+    <string name="about">About</string>
+    <string name="about_github_link" translatable="false">https://github.com/1nikolas/play-integrity-checker-app</string>
+</resources>

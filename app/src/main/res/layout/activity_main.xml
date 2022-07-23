@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/device_integrity_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_none"
+        app:layout_constraintBottom_toTopOf="@id/basic_integrity_icon"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/device_integrity_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/basic_integrity_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_none"
+        app:layout_constraintBottom_toTopOf="@id/strong_integrity_icon"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/basic_integrity_text"
+        app:layout_constraintTop_toBottomOf="@id/device_integrity_icon" />
+
+    <ImageView
+        android:id="@+id/strong_integrity_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_none"
+        app:layout_constraintBottom_toTopOf="@id/check_btn"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/strong_integrity_text"
+        app:layout_constraintTop_toBottomOf="@id/basic_integrity_icon" />
+
+
+    <TextView
+        android:id="@+id/device_integrity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10dp"
+        android:text=" MEETS_DEVICE_INTEGRITY "
+        android:textColor="?colorOnPrimary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/device_integrity_icon"
+        app:layout_constraintLeft_toRightOf="@id/device_integrity_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/device_integrity_icon"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/basic_integrity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10dp"
+        android:text="  MEETS_BASIC_INTEGRITY  "
+        android:textColor="?colorOnPrimary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/basic_integrity_icon"
+        app:layout_constraintLeft_toRightOf="@id/basic_integrity_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/basic_integrity_icon"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/strong_integrity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10dp"
+        android:text="MEETS_STRONG_INTEGRITY"
+        android:textColor="?colorOnPrimary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/strong_integrity_icon"
+        app:layout_constraintLeft_toRightOf="@id/strong_integrity_icon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/strong_integrity_icon"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/check_btn"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/check"
+        android:textColor="?colorOnPrimary"
+        app:iconTint="?colorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/strong_integrity_icon"
+        app:rippleColor="?colorSecondary" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
