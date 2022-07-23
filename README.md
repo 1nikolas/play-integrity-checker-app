@@ -1,5 +1,5 @@
 # Play Integrity API Checker
-Check whether your device is passing the Google Play Integrity API
+Get info about your Device Integrity through the Play Intergrity API
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
      alt="Get it on Google Play"
