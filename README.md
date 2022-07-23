@@ -10,7 +10,7 @@ In order to run this yourself you'll need:
 1) The [Play Integrity Checker Server](https://github.com/1nikolas/play-integrity-checker-server)
 2) Your server url specified in `local.properties` like this:
 ```
-API_URL=https://my-awsome-server-url.com/
+API_URL=https://my-awesome-server-url.com/
 ```
 3) The app to be on Play Store (otherwise you won't have access to `MEETS_BASIC_INTEGRITY` and `MEETS_STRONG_INTEGRITY`)
 4) Play Integrity linked to a Google Cloud project through the Play Console with `MEETS_BASIC_INTEGRITY` and `MEETS_STRONG_INTEGRITY` enabled
