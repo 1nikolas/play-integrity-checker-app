@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/about_top_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_appicon" />
+
+    <TextView
+        android:id="@+id/about_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/about_text"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:lineSpacingExtra="5sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/about_top_img"/>
+
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/about_buttons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:constraint_referenced_ids="about_github,about_licenses"
+        app:flow_horizontalGap="10dp"
+        app:flow_horizontalStyle="spread"
+        app:flow_wrapMode="chain"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/about_text" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/about_buttons" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/about_github"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/github"
+        android:textColor="?attr/colorSecondary"
+        app:icon="@drawable/ic_gh"
+        app:iconTint="?attr/colorSecondary"
+        app:rippleColor="@color/blueSecondary"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/about_licenses"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/licenses"
+        android:textColor="?attr/colorSecondary"
+        app:icon="@drawable/ic_licenses"
+        app:iconTint="?attr/colorSecondary"
+        app:rippleColor="@color/blueSecondary"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
