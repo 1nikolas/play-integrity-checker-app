@@ -92,9 +92,13 @@ public class MainActivity extends AppCompatActivity {
         integrityTokenResponse.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                toggleButtonLoading(false);
-                showErrorDialog("Error getting token from Google. Google said: " + getErrorText(e));
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        toggleButtonLoading(false);
+                        showErrorDialog("Error getting token from Google. Google said: " + getErrorText(e));
+                    }
+                });
             }
         });
     }

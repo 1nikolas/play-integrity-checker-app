@@ -1,11 +1,13 @@
 package gr.nikolasspyr.integritycheck.dialogs;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -66,14 +68,15 @@ public class AboutDialog {
 
     public void show(){
         dialog.show();
-
-        //MaterialButton button = (MaterialButton) dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
     }
 
     private void openLink(String url){
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
-        context.startActivity(i);
+        try {
+            context.startActivity(i);
+        } catch (ActivityNotFoundException e){ //For devices that have no browsers
+            Toast.makeText(context, R.string.no_browser_found, Toast.LENGTH_LONG).show();
+        }
     }
 }
