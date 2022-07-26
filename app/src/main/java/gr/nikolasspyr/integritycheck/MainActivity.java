@@ -92,13 +92,8 @@ public class MainActivity extends AppCompatActivity {
         integrityTokenResponse.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        toggleButtonLoading(false);
-                        showErrorDialog("Error getting token from Google. Google said: " + getErrorText(e));
-                    }
-                });
+                toggleButtonLoading(false);
+                showErrorDialog("Error getting token from Google. Google said: " + getErrorText(e));
             }
         });
     }
@@ -225,11 +220,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setIcon(ImageView img, int state){
         if (state == -1){
-            img.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_none));
+            img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_none));
         } else if (state == 0){
-            img.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_fail));
+            img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_fail));
         } else {
-            img.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_check));
+            img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_check));
         }
     }
 
