@@ -9,8 +9,8 @@ android {
         applicationId "gr.nikolasspyr.integritycheck"
         minSdk 21
         targetSdk 32
-        versionCode 03
-        versionName "0.3"
+        versionCode 04
+        versionName "0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
