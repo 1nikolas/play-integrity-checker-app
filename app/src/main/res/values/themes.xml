@@ -14,8 +14,10 @@
         <item name="android:navigationBarColor" >?attr/colorPrimaryVariant</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
-        <!-- 3dot color -->
+        <!-- 3dot -->
         <item name="actionOverflowButtonStyle">@style/Theme.PlayIntergrityAPIChecker.actionButtonOverflow</item>
+        <!-- Toolbar -->
+        <item name="actionBarTheme">@style/Theme.PlayIntergrityAPIChecker.actionBarTheme</item>
     </style>
 
     <style name="Theme.PlayIntergrityAPIChecker.Dialogs" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
@@ -25,5 +27,9 @@
 
     <style name="Theme.PlayIntergrityAPIChecker.actionButtonOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="android:tint">@color/black</item>
+    </style>
+
+    <style name="Theme.PlayIntergrityAPIChecker.actionBarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
 </resources>
