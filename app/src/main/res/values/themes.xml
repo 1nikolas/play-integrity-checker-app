@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.PlayIntergrityAPIChecker" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.PlayIntegrityAPIChecker" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -15,21 +15,21 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <!-- 3dot -->
-        <item name="actionOverflowButtonStyle">@style/Theme.PlayIntergrityAPIChecker.actionButtonOverflow</item>
+        <item name="actionOverflowButtonStyle">@style/Theme.PlayIntegrityAPIChecker.actionButtonOverflow</item>
         <!-- Toolbar -->
-        <item name="actionBarTheme">@style/Theme.PlayIntergrityAPIChecker.actionBarTheme</item>
+        <item name="actionBarTheme">@style/Theme.PlayIntegrityAPIChecker.actionBarTheme</item>
     </style>
 
-    <style name="Theme.PlayIntergrityAPIChecker.Dialogs" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <style name="Theme.PlayIntegrityAPIChecker.Dialogs" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorAccent">@color/blueSecondary</item>
         <item name="colorPrimary">@color/blueSecondary</item>
     </style>
 
-    <style name="Theme.PlayIntergrityAPIChecker.actionButtonOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+    <style name="Theme.PlayIntegrityAPIChecker.actionButtonOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="android:tint">@color/black</item>
     </style>
 
-    <style name="Theme.PlayIntergrityAPIChecker.actionBarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="Theme.PlayIntegrityAPIChecker.actionBarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/black</item>
     </style>
 </resources>

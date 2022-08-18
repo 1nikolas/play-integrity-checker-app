@@ -2,7 +2,7 @@
 
 # Play Integrity API Checker
 
-Get info about your Device Integrity through the Play Intergrity API
+Get info about your Device Integrity through the Play Integrity API
      
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
      alt="Get it on Google Play"

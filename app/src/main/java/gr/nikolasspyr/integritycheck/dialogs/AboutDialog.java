@@ -26,7 +26,7 @@ public class AboutDialog {
     public AboutDialog(Context context){
         this.context = context;
 
-        dialog = new MaterialAlertDialogBuilder(context, R.style.Theme_PlayIntergrityAPIChecker_Dialogs)
+        dialog = new MaterialAlertDialogBuilder(context, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

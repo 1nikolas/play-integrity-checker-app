@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showErrorDialog(String text){
-        new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntergrityAPIChecker_Dialogs)
+        new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
                 .setTitle(R.string.error)
                 .setCancelable(true)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Menu stuff
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         //toolbarMenu = menu;
 

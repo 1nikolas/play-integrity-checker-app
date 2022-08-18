@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Play Intergrity API Checker"
+rootProject.name = "Play Integrity API Checker"
 include ':app'

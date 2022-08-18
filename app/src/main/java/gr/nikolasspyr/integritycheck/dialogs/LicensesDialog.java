@@ -25,7 +25,7 @@ public class LicensesDialog {
     public LicensesDialog(Context context){
         this.context = context;
 
-        dialog = new MaterialAlertDialogBuilder(context, R.style.Theme_PlayIntergrityAPIChecker_Dialogs)
+        dialog = new MaterialAlertDialogBuilder(context, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
                 .setTitle(R.string.licenses)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
