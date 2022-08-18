@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Play Intergrity API Checker</string>
+    <string name="app_name" translatable="false">Play Integrity API Checker</string>
     <string name="error">Error</string>
     <string name="ok">OK</string>
     <string name="check">Check</string>
