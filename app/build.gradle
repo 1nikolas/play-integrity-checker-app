@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "gr.nikolasspyr.integritycheck"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 05
         versionName "0.5"
 
@@ -35,6 +35,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'gr.nikolasspyr.integritycheck'
 
     tasks.whenTaskAdded { task ->
         switch (task.name) {
