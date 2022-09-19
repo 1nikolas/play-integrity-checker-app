@@ -82,16 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
         integrityTokenResponse.addOnFailureListener(e -> {
             toggleButtonLoading(false);
-            showErrorDialog("Error getting token from Google:\n\n" + getErrorText(e));
+            showErrorDialog("Error getting token from Google", getErrorText(e));
         });
     }
 
-    private class getTokenResponse extends AsyncTask<String, Integer, String> {
+    private class getTokenResponse extends AsyncTask<String, Integer, String[]> {
 
         private boolean hasError = false;
 
         @Override
-        protected String doInBackground(String token) throws Exception {
+        protected String[] doInBackground(String token) throws Exception {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .get()
@@ -102,42 +102,44 @@ public class MainActivity extends AppCompatActivity {
 
             if (!response.isSuccessful()) {
                 hasError = true;
-                return "Api request error. Code: " + response.code();
+                return new String[]{"Api request error", "Error code: " + response.code()};
             }
             ResponseBody responseBody = response.body();
 
             if (responseBody == null) {
                 hasError = true;
-                return "Api request error. Empty response";
+                return new String[]{"Api request error", "Empty response"};
             }
 
             JSONObject json = new JSONObject(responseBody.string());
 
             if (json.has("error")) {
                 hasError = true;
-                return "Api request error: " + json.getString("error");
+                return new String[]{"Api request error", json.getString("error")};
             }
 
             if (!json.has("deviceIntegrity")) {
                 hasError = true;
-                return "Api request error: Response does not contain deviceIntegrity";
+                return new String[]{"Api request error", "Response does not contain deviceIntegrity"};
             }
 
             jsonResponse = json.toString(4);
-            return json.getJSONObject("deviceIntegrity").toString();
+            return new String[]{json.getJSONObject("deviceIntegrity").toString()};
         }
 
         @Override
         protected void onBackgroundError(Exception e) {
             hasError = true;
-            onPostExecute("Api request error: " + e.getMessage());
+            onPostExecute(new String[]{"Api request error", e.getMessage()});
         }
 
-        protected void onPostExecute(String result) {
+        @Override
+        protected void onPostExecute(String[] result) {
             if (hasError) {
-                showErrorDialog(result);
+                showErrorDialog(result[0], result[1]);
             } else {
-                setIcons(result.contains("MEETS_DEVICE_INTEGRITY") ? 1 : 0, result.contains("MEETS_BASIC_INTEGRITY") ? 1 : 0, result.contains("MEETS_STRONG_INTEGRITY") ? 1 : 0);
+                String json = result[0];
+                setIcons(json.contains("MEETS_DEVICE_INTEGRITY") ? 1 : 0, json.contains("MEETS_BASIC_INTEGRITY") ? 1 : 0, json.contains("MEETS_STRONG_INTEGRITY") ? 1 : 0);
             }
             toggleButtonLoading(false);
         }
@@ -188,14 +190,14 @@ public class MainActivity extends AppCompatActivity {
         return nonce;
     }
 
-    private void showErrorDialog(String text) {
+    private void showErrorDialog(String title, String message) {
         new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
-                .setTitle(R.string.error)
+                .setTitle(title)
                 .setCancelable(true)
                 .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
 
                 })
-                .setMessage(text)
+                .setMessage(message)
                 .show();
     }
 
@@ -228,48 +230,48 @@ public class MainActivity extends AppCompatActivity {
         int errorCode = Integer.parseInt(msg.replaceAll("\n", "").replaceAll(":(.*)", ""));
         switch (errorCode) {
             case IntegrityErrorCode.API_NOT_AVAILABLE:
-                return "Integrity API is not available.\n" +
+                return "Integrity API is not available.\n\n" +
                         "The Play Store version might be old, try updating it.";
             case IntegrityErrorCode.APP_NOT_INSTALLED:
-                return "The calling app is not installed.\n" +
-                        "This shouldn't happen.";
+                return "The calling app is not installed.\n\n" +
+                        "This shouldn't happen. If it does please open an issue on Github.";
             case IntegrityErrorCode.APP_UID_MISMATCH:
-                return "The calling app UID (user id) does not match the one from Package Manager.\n" +
-                        "This shouldn't happen.";
+                return "The calling app UID (user id) does not match the one from Package Manager.\n\n" +
+                        "This shouldn't happen. If it does please open an issue on Github.";
             case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE:
-                return "Binding to the service in the Play Store has failed.\n" +
+                return "Binding to the service in the Play Store has failed.\n\n" +
                         "This can be due to having an old Play Store version installed on the device.";
             case IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE:
                 return "Unknown internal Google server error.";
             case IntegrityErrorCode.INTERNAL_ERROR:
                 return "Unknown internal error.";
             case IntegrityErrorCode.NETWORK_ERROR:
-                return "No available network is found.\n" +
+                return "No available network is found.\n\n" +
                         "Please check your connection.";
             case IntegrityErrorCode.NO_ERROR:
-                return "No error has occurred.\n" +
+                return "No error has occurred.\n\n" +
                         "If you ever get this, congrats, I have no idea what it means.";
             case IntegrityErrorCode.NONCE_IS_NOT_BASE64:
-                return "Nonce is not encoded as a base64 web-safe no-wrap string.\n" +
-                        "This shouldn't happen.";
+                return "Nonce is not encoded as a base64 web-safe no-wrap string.\n\n" +
+                        "This shouldn't happen. If it does please open an issue on Github.";
             case IntegrityErrorCode.NONCE_TOO_LONG:
                 return "Nonce length is too long.\n" +
-                        "This shouldn't happen.";
+                        "This shouldn't happen. If it does please open an issue on Github.";
             case IntegrityErrorCode.NONCE_TOO_SHORT:
                 return "Nonce length is too short.\n" +
-                        "This shouldn't happen.";
+                        "This shouldn't happen. If it does please open an issue on Github.";
             case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND:
-                return "Play Services is not available or version is too old.\n" +
+                return "Play Services is not available or version is too old.\n\n" +
                         "Try updating Google Play Services.";
             case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND:
-                return "No Play Store account is found on device.\n" +
+                return "No Play Store account is found on device.\n\n" +
                         "Try logging into Play Store.";
             case IntegrityErrorCode.PLAY_STORE_NOT_FOUND:
-                return "No Play Store app is found on device or not official version is installed." +
+                return "No Play Store app is found on device or not official version is installed.\n\n" +
                         "This app can't work without Play Store.";
             case IntegrityErrorCode.TOO_MANY_REQUESTS:
-                return "The calling app is making too many requests to the API and hence is throttled." +
-                        "This shouldn't happen.";
+                return "The calling app is making too many requests to the API and hence is throttled.\n\n" +
+                        "This shouldn't happen. If it does please open an issue on Github.";
             default:
                 return "Unknown Error";
         }
