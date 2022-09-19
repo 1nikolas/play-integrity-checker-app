@@ -36,10 +36,6 @@ public class LicensesViewModel extends AndroidViewModel {
         return mLicenses;
     }
 
-    public LiveData<Boolean> getAreLicensesLoading() {
-        return mAreLicensesLoading;
-    }
-
     private void loadLicences() {
         if (Boolean.TRUE.equals(mAreLicensesLoading.getValue()))
             return;
@@ -90,7 +86,6 @@ public class LicensesViewModel extends AndroidViewModel {
         copyStream(inputStream, buffer);
         return buffer.toByteArray();
     }
-
 
 
 }

@@ -1,25 +1,21 @@
 package gr.nikolasspyr.integritycheck;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -44,13 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private ImageView deviceIntegrityIcon;
     private ImageView basicIntegrityIcon;
     private ImageView strongIntegrityIcon;
+    private String jsonResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.app_name);
         }
 
@@ -59,18 +56,15 @@ public class MainActivity extends AppCompatActivity {
         basicIntegrityIcon = findViewById(R.id.basic_integrity_icon);
         strongIntegrityIcon = findViewById(R.id.strong_integrity_icon);
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleButtonLoading(true);
-                setIcons(-1, -1, -1);
-                getToken();
-            }
+        btn.setOnClickListener(view -> {
+            toggleButtonLoading(true);
+            setIcons(-1, -1, -1);
+            getToken();
         });
     }
 
-    private void getToken(){
-        String nonce = generateNonce(50);
+    private void getToken() {
+        String nonce = generateNonce();
 
         // Create an instance of a manager.
         IntegrityManager integrityManager = IntegrityManagerFactory.create(getApplicationContext());
@@ -81,24 +75,18 @@ public class MainActivity extends AppCompatActivity {
                         .setNonce(nonce)
                         .build());
 
-        integrityTokenResponse.addOnSuccessListener(new OnSuccessListener<IntegrityTokenResponse>() {
-            @Override
-            public void onSuccess(IntegrityTokenResponse integrityTokenResponse) {
-                String integrityToken = integrityTokenResponse.token();
-                new getTokenResponse().execute(integrityToken);
-            }
+        integrityTokenResponse.addOnSuccessListener(integrityTokenResponse1 -> {
+            String integrityToken = integrityTokenResponse1.token();
+            new getTokenResponse().execute(integrityToken);
         });
 
-        integrityTokenResponse.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                toggleButtonLoading(false);
-                showErrorDialog("Error getting token from Google. Google said: " + getErrorText(e));
-            }
+        integrityTokenResponse.addOnFailureListener(e -> {
+            toggleButtonLoading(false);
+            showErrorDialog("Error getting token from Google:\n\n" + getErrorText(e));
         });
     }
 
-    private class getTokenResponse extends AsyncTask<String, Integer, String>{
+    private class getTokenResponse extends AsyncTask<String, Integer, String> {
 
         private boolean hasError = false;
 
@@ -112,29 +100,30 @@ public class MainActivity extends AppCompatActivity {
 
             Response response = client.newCall(request).execute();
 
-            if (!response.isSuccessful()){
+            if (!response.isSuccessful()) {
                 hasError = true;
                 return "Api request error. Code: " + response.code();
             }
             ResponseBody responseBody = response.body();
 
-            if (responseBody == null){
+            if (responseBody == null) {
                 hasError = true;
                 return "Api request error. Empty response";
             }
 
             JSONObject json = new JSONObject(responseBody.string());
 
-            if (json.has("error")){
+            if (json.has("error")) {
                 hasError = true;
                 return "Api request error: " + json.getString("error");
             }
 
-            if (!json.has("deviceIntegrity")){
+            if (!json.has("deviceIntegrity")) {
                 hasError = true;
                 return "Api request error: Response does not contain deviceIntegrity";
             }
 
+            jsonResponse = json.toString(4);
             return json.getJSONObject("deviceIntegrity").toString();
         }
 
@@ -144,17 +133,17 @@ public class MainActivity extends AppCompatActivity {
             onPostExecute("Api request error: " + e.getMessage());
         }
 
-        protected void onPostExecute(String result){
-            if (hasError){
+        protected void onPostExecute(String result) {
+            if (hasError) {
                 showErrorDialog(result);
             } else {
-                setIcons(result.contains("MEETS_DEVICE_INTEGRITY")? 1 : 0, result.contains("MEETS_BASIC_INTEGRITY")? 1 : 0, result.contains("MEETS_STRONG_INTEGRITY")? 1 : 0);
+                setIcons(result.contains("MEETS_DEVICE_INTEGRITY") ? 1 : 0, result.contains("MEETS_BASIC_INTEGRITY") ? 1 : 0, result.contains("MEETS_STRONG_INTEGRITY") ? 1 : 0);
             }
             toggleButtonLoading(false);
         }
     }
 
-    private void toggleButtonLoading(boolean isLoading){
+    private void toggleButtonLoading(boolean isLoading) {
         setButtonLoading(btn, isLoading);
         btn.setEnabled(!isLoading);
     }
@@ -189,84 +178,98 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String generateNonce(int length){
+    private String generateNonce() {
+        int length = 50;
         String nonce = "";
         String allowed = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             nonce = nonce.concat(String.valueOf(allowed.charAt((int) Math.floor(Math.random() * allowed.length()))));
         }
         return nonce;
     }
 
-    private void showErrorDialog(String text){
+    private void showErrorDialog(String text) {
         new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
                 .setTitle(R.string.error)
                 .setCancelable(true)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
 
-                    }
                 })
                 .setMessage(text)
                 .show();
     }
 
-    private void setIcons(int deviceState, int basicState, int strongState){
+    private void setIcons(int deviceState, int basicState, int strongState) {
         setIcon(deviceIntegrityIcon, deviceState);
         setIcon(basicIntegrityIcon, basicState);
         setIcon(strongIntegrityIcon, strongState);
     }
 
-    private void setIcon(ImageView img, int state){
-        if (state == -1){
-            img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_none));
-        } else if (state == 0){
+    private void setIcon(ImageView img, int state) {
+        if (state == -1) {
+            img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_unknown));
+            img.setContentDescription(getString(R.string.status_unknown));
+        } else if (state == 0) {
             img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_fail));
+            img.setContentDescription(getString(R.string.status_fail));
         } else {
-            img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_check));
+            img.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_pass));
+            img.setContentDescription(getString(R.string.status_pass));
         }
     }
 
-    private String getErrorText(Exception e){
+    private String getErrorText(Exception e) {
         String msg = e.getMessage();
-        if (msg == null){
+        if (msg == null) {
             return "Unknown Error";
         }
 
         //Pretty junk way of getting the error code but it works
         int errorCode = Integer.parseInt(msg.replaceAll("\n", "").replaceAll(":(.*)", ""));
-        switch(errorCode){
+        switch (errorCode) {
             case IntegrityErrorCode.API_NOT_AVAILABLE:
-                return "API_NOT_AVAILABLE";
-            case IntegrityErrorCode.NO_ERROR:
-                return "NO_ERROR";
-            case IntegrityErrorCode.INTERNAL_ERROR:
-                return "INTERNAL_ERROR";
-            case IntegrityErrorCode.NETWORK_ERROR:
-                return "NETWORK_ERROR";
-            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND:
-                return "PLAY_STORE_NOT_FOUND";
-            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND:
-                return "PLAY_STORE_ACCOUNT_NOT_FOUND";
+                return "Integrity API is not available.\n" +
+                        "The Play Store version might be old, try updating it.";
             case IntegrityErrorCode.APP_NOT_INSTALLED:
-                return "APP_NOT_INSTALLED";
-            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND:
-                return "PLAY_SERVICES_NOT_FOUND";
+                return "The calling app is not installed.\n" +
+                        "This shouldn't happen.";
             case IntegrityErrorCode.APP_UID_MISMATCH:
-                return "APP_UID_MISMATCH";
-            case IntegrityErrorCode.TOO_MANY_REQUESTS:
-                return "TOO_MANY_REQUESTS";
+                return "The calling app UID (user id) does not match the one from Package Manager.\n" +
+                        "This shouldn't happen.";
             case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE:
-                return "CANNOT_BIND_TO_SERVICE";
-            case IntegrityErrorCode.NONCE_TOO_SHORT:
-                return "NONCE_TOO_SHORT";
-            case IntegrityErrorCode.NONCE_TOO_LONG:
-                return "NONCE_TOO_LONG";
+                return "Binding to the service in the Play Store has failed.\n" +
+                        "This can be due to having an old Play Store version installed on the device.";
             case IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE:
-                return "GOOGLE_SERVER_UNAVAILABLE";
+                return "Unknown internal Google server error.";
+            case IntegrityErrorCode.INTERNAL_ERROR:
+                return "Unknown internal error.";
+            case IntegrityErrorCode.NETWORK_ERROR:
+                return "No available network is found.\n" +
+                        "Please check your connection.";
+            case IntegrityErrorCode.NO_ERROR:
+                return "No error has occurred.\n" +
+                        "If you ever get this, congrats, I have no idea what it means.";
             case IntegrityErrorCode.NONCE_IS_NOT_BASE64:
-                return "NONCE_IS_NOT_BASE64";
+                return "Nonce is not encoded as a base64 web-safe no-wrap string.\n" +
+                        "This shouldn't happen.";
+            case IntegrityErrorCode.NONCE_TOO_LONG:
+                return "Nonce length is too long.\n" +
+                        "This shouldn't happen.";
+            case IntegrityErrorCode.NONCE_TOO_SHORT:
+                return "Nonce length is too short.\n" +
+                        "This shouldn't happen.";
+            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND:
+                return "Play Services is not available or version is too old.\n" +
+                        "Try updating Google Play Services.";
+            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND:
+                return "No Play Store account is found on device.\n" +
+                        "Try logging into Play Store.";
+            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND:
+                return "No Play Store app is found on device or not official version is installed." +
+                        "This app can't work without Play Store.";
+            case IntegrityErrorCode.TOO_MANY_REQUESTS:
+                return "The calling app is making too many requests to the API and hence is throttled." +
+                        "This shouldn't happen.";
             default:
                 return "Unknown Error";
         }
@@ -276,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        //toolbarMenu = menu;
 
         return true;
     }
@@ -287,6 +289,23 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.about) {
             new AboutDialog(MainActivity.this).show();
+            return true;
+        } else if (id == R.id.json_response) {
+            if (jsonResponse == null) {
+                Toast.makeText(this, R.string.check_first, Toast.LENGTH_SHORT).show();
+            } else {
+                new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
+                        .setTitle(R.string.json_response)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+
+                        })
+                        .setMessage(jsonResponse)
+                        .show();
+            }
+            return true;
+        } else if (id == R.id.documentation) {
+            Utils.openLink(getString(R.string.docs_link), this);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

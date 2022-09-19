@@ -26,7 +26,7 @@ public class LicensesAdapter extends RecyclerView.Adapter<LicensesAdapter.ViewHo
 
     public void setLicenses(List<License> licenses) {
         mLicenses = licenses;
-        notifyDataSetChanged();
+        notifyItemRangeInserted(0, licenses.size());
     }
 
     @NonNull

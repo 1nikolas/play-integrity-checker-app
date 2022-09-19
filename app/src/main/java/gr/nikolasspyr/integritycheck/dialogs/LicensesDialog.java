@@ -1,7 +1,6 @@
 package gr.nikolasspyr.integritycheck.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
@@ -22,16 +21,13 @@ public class LicensesDialog {
     private final AlertDialog dialog;
     private final Context context;
 
-    public LicensesDialog(Context context){
+    public LicensesDialog(Context context) {
         this.context = context;
 
         dialog = new MaterialAlertDialogBuilder(context, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
                 .setTitle(R.string.licenses)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
 
-                    }
                 })
                 .create();
 
@@ -54,7 +50,7 @@ public class LicensesDialog {
 
     }
 
-    public void show(){
+    public void show() {
         dialog.show();
 
         MaterialButton button = (MaterialButton) dialog.getButton(AlertDialog.BUTTON_POSITIVE);

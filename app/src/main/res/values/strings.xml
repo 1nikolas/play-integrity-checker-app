@@ -10,4 +10,12 @@
     <string name="about">About</string>
     <string name="about_github_link" translatable="false">https://github.com/1nikolas/play-integrity-checker-app</string>
     <string name="no_browser_found">No browser found!</string>
+    <string name="status_unknown">Unknown</string>
+    <string name="status_pass">Pass</string>
+    <string name="status_fail">Fail</string>
+    <string name="show_json_response">Show JSON response</string>
+    <string name="json_response">Raw JSON response</string>
+    <string name="check_first">Please run a check first!</string>
+    <string name="show_documentation">Learn what the results mean</string>
+    <string name="docs_link">https://developer.android.com/google/play/integrity/verdict#device-integrity-field</string>
 </resources>

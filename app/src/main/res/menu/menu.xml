@@ -2,6 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/json_response"
+        android:title="@string/show_json_response"
+        android:icon="@drawable/ic_json"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/documentation"
+        android:title="@string/show_documentation"
+        app:showAsAction="never" />
+
     <item android:id="@+id/about"
         android:title="@string/about"
         app:showAsAction="never" />

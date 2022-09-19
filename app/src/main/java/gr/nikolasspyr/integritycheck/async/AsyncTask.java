@@ -47,6 +47,7 @@ public abstract class AsyncTask<INPUT, PROGRESS, OUTPUT> {
 
     /**
      * Starts is all
+     *
      * @param input Data you want to work with in the background
      */
     public AsyncTask<INPUT, PROGRESS, OUTPUT> execute(final INPUT input) {
@@ -69,7 +70,8 @@ public abstract class AsyncTask<INPUT, PROGRESS, OUTPUT> {
 
     /**
      * Call to publish progress from background
-     * @param progress  Progress made
+     *
+     * @param progress Progress made
      */
     protected void publishProgress(final PROGRESS progress) {
         AsyncWorker.getInstance().getHandler().post(() -> {
@@ -93,7 +95,6 @@ public abstract class AsyncTask<INPUT, PROGRESS, OUTPUT> {
     }
 
     /**
-     *
      * @return Returns true if the background work should be cancelled
      */
     protected boolean isCancelled() {
@@ -120,16 +121,18 @@ public abstract class AsyncTask<INPUT, PROGRESS, OUTPUT> {
 
     /**
      * Work on background
+     *
      * @param input Input data
-     * @return      Output data
-     * @throws Exception    Any uncought exception which occurred while working in background. If
-     * any occurs, {@link #onBackgroundError(Exception)} will be executed (on the UI thread)
+     * @return Output data
+     * @throws Exception Any uncought exception which occurred while working in background. If
+     *                   any occurs, {@link #onBackgroundError(Exception)} will be executed (on the UI thread)
      */
     protected abstract OUTPUT doInBackground(INPUT input) throws Exception;
 
     /**
      * Work which you want to be done on UI thread after {@link #doInBackground(Object)}
-     * @param output    Output data from {@link #doInBackground(Object)}
+     *
+     * @param output Output data from {@link #doInBackground(Object)}
      */
     protected void onPostExecute(OUTPUT output) {
 
@@ -137,12 +140,14 @@ public abstract class AsyncTask<INPUT, PROGRESS, OUTPUT> {
 
     /**
      * Triggered on UI thread if any uncought exception occurred while working in background
+     *
      * @param e Exception
      * @see #doInBackground(Object)
      */
     protected abstract void onBackgroundError(Exception e);
 
     private OnProgressListener<PROGRESS> onProgressListener;
+
     public interface OnProgressListener<PROGRESS> {
         void onProgress(PROGRESS progress);
     }
@@ -152,6 +157,7 @@ public abstract class AsyncTask<INPUT, PROGRESS, OUTPUT> {
     }
 
     private OnCancelledListener onCancelledListener;
+
     public interface OnCancelledListener {
         void onCancelled();
     }
