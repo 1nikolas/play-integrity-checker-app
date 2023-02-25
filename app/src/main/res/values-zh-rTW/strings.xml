@@ -1,14 +1,10 @@
 <resources>
-    <string name="app_name" translatable="false">Play Integrity API 檢查器</string>
     <string name="error">錯誤</string>
     <string name="ok">OK</string>
     <string name="check">檢查</string>
-    <string name="app_name_short" translatable="false">Integrity 檢查器</string>
     <string name="licenses">許可證書</string>
-    <string name="github" translatable="false">GitHub</string>
     <string name="about_text">作者：Nikolas Spiridakis\n版本：{name} ({code})</string>
     <string name="about">關於</string>
-    <string name="about_github_link" translatable="false">https://github.com/1nikolas/play-integrity-checker-app</string>
     <string name="no_browser_found">找不到瀏覽器！</string>
     <string name="status_unknown">未知</string>
     <string name="status_pass">通過</string>
