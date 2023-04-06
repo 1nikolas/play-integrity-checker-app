@@ -41,7 +41,10 @@ public class LicensesViewModel extends AndroidViewModel {
     }
 
     private void loadLicences() {
-        if (Boolean.TRUE.equals(AreLicensesLoading.getValue()))
+
+        // Introducing explaining variable 
+        Boolean ValueForLicensesLoading = AreLicensesLoading.getValue();
+        if (ValueForLicensesLoading == true)
             return;
     
         AreLicensesLoading.setValue(true);
