@@ -113,12 +113,15 @@ public class MainActivity extends AppCompatActivity {
 
             JSONObject json = new JSONObject(responseBody.string());
 
-            if (json.has("error")) {
-                hasError = true;
+            //This is an example of Introucing Explaining Variable Refactopring
+            boolean hasError = json.has("error");
+            boolean hasDeviceIntegrity = json.has("deviceIntegrity");
+
+            if (hasError) {
                 return new String[]{"Api request error", json.getString("error")};
             }
 
-            if (!json.has("deviceIntegrity")) {
+            if (!hasDeviceIntegrity) {
                 hasError = true;
                 return new String[]{"Api request error", "Response does not contain deviceIntegrity"};
             }
@@ -220,61 +223,94 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getErrorText(Exception e) {
+
+    // Pull-up variable/method Refactoring
+    public abstract class BaseActivity extends AppCompatActivity {
+        // Move IntegrityErrorCode here as a constant
+        protected static class IntegrityErrorCode {
+            public static final int API_NOT_AVAILABLE = 1;
+            public static final int APP_NOT_INSTALLED = 2;
+            public static final int APP_UID_MISMATCH = 3;
+            public static final int CANNOT_BIND_TO_SERVICE = 4;
+            public static final int GOOGLE_SERVER_UNAVAILABLE = 5;
+            public static final int INTERNAL_ERROR = 6;
+            public static final int NETWORK_ERROR = 7;
+            public static final int NO_ERROR = 8;
+            public static final int NONCE_IS_NOT_BASE64 = 9;
+            public static final int NONCE_TOO_LONG = 10;
+            public static final int NONCE_TOO_SHORT = 11;
+            public static final int PLAY_SERVICES_NOT_FOUND = 12;
+            public static final int PLAY_STORE_ACCOUNT_NOT_FOUND = 13;
+            public static final int PLAY_STORE_NOT_FOUND = 14;
+            public static final int TOO_MANY_REQUESTS = 15;
+        }
+    }
+
+    // Pull-up variable/method Refactoring
+    public class MainActivity extends BaseActivity {
+
+        public static String ErrorList(String msg){
+            //Pretty junk way of getting the error code but it works
+            int errorCode = Integer.parseInt(msg.replaceAll("\n", "").replaceAll(":(.*)", ""));
+            switch (errorCode) {
+                case 1:
+                    return "Integrity API is not available.\n\n" +
+                            "The Play Store version might be old, try updating it.";
+                case 2:
+                    return "The calling app is not installed.\n\n" +
+                            "This shouldn't happen. If it does please open an issue on Github.";
+                case 3:
+                    return "The calling app UID (user id) does not match the one from Package Manager.\n\n" +
+                            "This shouldn't happen. If it does please open an issue on Github.";
+                case 4:
+                    return "Binding to the service in the Play Store has failed.\n\n" +
+                            "This can be due to having an old Play Store version installed on the device.";
+                case 5:
+                    return "Unknown internal Google server error.";
+                case 6:
+                    return "Unknown internal error.";
+                case 7:
+                    return "No available network is found.\n\n" +
+                            "Please check your connection.";
+                case 8:
+                    return "No error has occurred.\n\n" +
+                            "If you ever get this, congrats, I have no idea what it means.";
+                case 9:
+                    return "Nonce is not encoded as a base64 web-safe no-wrap string.\n\n" +
+                            "This shouldn't happen. If it does please open an issue on Github.";
+                case 10:
+                    return "Nonce length is too long.\n" +
+                            "This shouldn't happen. If it does please open an issue on Github.";
+                case 11:
+                    return "Nonce length is too short.\n" +
+                            "This shouldn't happen. If it does please open an issue on Github.";
+                case 12:
+                    return "Play Services is not available or version is too old.\n\n" +
+                            "Try updating Google Play Services.";
+                case 13:
+                    return "No Play Store account is found on device.\n\n" +
+                            "Try logging into Play Store.";
+                case 14:
+                    return "No Play Store app is found on device or not official version is installed.\n\n" +
+                            "This app can't work without Play Store.";
+                case 15:
+                    return "The calling app is making too many requests to the API and hence is throttled.\n\n" +
+                            "This shouldn't happen. If it does please open an issue on Github.";
+                default:
+                    return "Unknown Error";
+            }
+        }
+        
+    }
+
+    // Pull-up variable/method Refactoring
+    public String getErrorText(Exception e) {
         String msg = e.getMessage();
         if (msg == null) {
             return "Unknown Error";
         }
 
-        //Pretty junk way of getting the error code but it works
-        int errorCode = Integer.parseInt(msg.replaceAll("\n", "").replaceAll(":(.*)", ""));
-        switch (errorCode) {
-            case IntegrityErrorCode.API_NOT_AVAILABLE:
-                return "Integrity API is not available.\n\n" +
-                        "The Play Store version might be old, try updating it.";
-            case IntegrityErrorCode.APP_NOT_INSTALLED:
-                return "The calling app is not installed.\n\n" +
-                        "This shouldn't happen. If it does please open an issue on Github.";
-            case IntegrityErrorCode.APP_UID_MISMATCH:
-                return "The calling app UID (user id) does not match the one from Package Manager.\n\n" +
-                        "This shouldn't happen. If it does please open an issue on Github.";
-            case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE:
-                return "Binding to the service in the Play Store has failed.\n\n" +
-                        "This can be due to having an old Play Store version installed on the device.";
-            case IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE:
-                return "Unknown internal Google server error.";
-            case IntegrityErrorCode.INTERNAL_ERROR:
-                return "Unknown internal error.";
-            case IntegrityErrorCode.NETWORK_ERROR:
-                return "No available network is found.\n\n" +
-                        "Please check your connection.";
-            case IntegrityErrorCode.NO_ERROR:
-                return "No error has occurred.\n\n" +
-                        "If you ever get this, congrats, I have no idea what it means.";
-            case IntegrityErrorCode.NONCE_IS_NOT_BASE64:
-                return "Nonce is not encoded as a base64 web-safe no-wrap string.\n\n" +
-                        "This shouldn't happen. If it does please open an issue on Github.";
-            case IntegrityErrorCode.NONCE_TOO_LONG:
-                return "Nonce length is too long.\n" +
-                        "This shouldn't happen. If it does please open an issue on Github.";
-            case IntegrityErrorCode.NONCE_TOO_SHORT:
-                return "Nonce length is too short.\n" +
-                        "This shouldn't happen. If it does please open an issue on Github.";
-            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND:
-                return "Play Services is not available or version is too old.\n\n" +
-                        "Try updating Google Play Services.";
-            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND:
-                return "No Play Store account is found on device.\n\n" +
-                        "Try logging into Play Store.";
-            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND:
-                return "No Play Store app is found on device or not official version is installed.\n\n" +
-                        "This app can't work without Play Store.";
-            case IntegrityErrorCode.TOO_MANY_REQUESTS:
-                return "The calling app is making too many requests to the API and hence is throttled.\n\n" +
-                        "This shouldn't happen. If it does please open an issue on Github.";
-            default:
-                return "Unknown Error";
-        }
+        return MainActivity.ErrorList(msg);
     }
 
     // Menu stuff

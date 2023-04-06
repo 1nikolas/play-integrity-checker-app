@@ -17,74 +17,89 @@ import java.util.Collections;
 import java.util.List;
 
 import gr.nikolasspyr.integritycheck.entities.License;
+import gr.nikolasspyr.integritycheck.entities.StreamUtils;  // Move Method
 
 public class LicensesViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<List<License>> mLicenses = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> mAreLicensesLoading = new MutableLiveData<>();
+    // Changing the variable name to NumberOfLincenses instead of mlicences as the variable doesnt make sense
+    private final MutableLiveData<List<License>> NumberOfLincenses = new MutableLiveData<>();  
+    // Changing the variable name to AreLicensesLoading instead of AreLicensesLoading as the variable doesnt make sense
+    private final MutableLiveData<Boolean> AreLicensesLoading = new MutableLiveData<>();
 
     public LicensesViewModel(@NonNull Application application) {
         super(application);
 
-        mLicenses.setValue(Collections.emptyList());
-        mAreLicensesLoading.setValue(false);
+        NumberOfLincenses.setValue(Collections.emptyList());
+        AreLicensesLoading.setValue(false);
 
         loadLicences();
     }
 
     public LiveData<List<License>> getLicenses() {
-        return mLicenses;
+        return NumberOfLincenses;
     }
 
     private void loadLicences() {
-        if (Boolean.TRUE.equals(mAreLicensesLoading.getValue()))
+        if (Boolean.TRUE.equals(AreLicensesLoading.getValue()))
             return;
-
-        mAreLicensesLoading.setValue(true);
-
+    
+        AreLicensesLoading.setValue(true);
+    
         new Thread(() -> {
             try {
                 AssetManager assetManager = getApplication().getAssets();
                 String licensesDir = "licenses";
-
-                String[] rawLicenses = assetManager.list(licensesDir);
-                ArrayList<License> licenses = new ArrayList<>(rawLicenses.length);
-
-                for (String rawLicense : rawLicenses)
-                    licenses.add(new License(rawLicense, readStream(assetManager.open(licensesDir + "/" + rawLicense), "UTF-8")));
-
-                Collections.sort(licenses, (license1, license2) -> license1.subject.compareToIgnoreCase(license2.subject));
-
-                mLicenses.postValue(licenses);
-                mAreLicensesLoading.postValue(false);
+    
+                ArrayList<License> licenses = readLicenses(assetManager, licensesDir);  // Extract Method Refactoring
+                sortLicenses(licenses); // Example of extract Method Refactoring
+    
+                NumberOfLincenses.postValue(licenses);
+                AreLicensesLoading.postValue(false);
             } catch (Exception e) {
-                mAreLicensesLoading.postValue(false);
+                AreLicensesLoading.postValue(false);
             }
         }).start();
     }
+    
+    private ArrayList<License> readLicenses(AssetManager assetManager, String licensesDir) throws IOException {
+        String[] rawLicenses = assetManager.list(licensesDir);
+        ArrayList<License> licenses = new ArrayList<>(rawLicenses.length);
+    
+        for (String rawLicense : rawLicenses)
+            licenses.add(new License(rawLicense, readStream(assetManager.open(licensesDir + "/" + rawLicense), "UTF-8")));
+    
+        return licenses;
+    }
+    
+    private void sortLicenses(ArrayList<License> licenses) {
+        Collections.sort(licenses, new LicenseComparator());
+    }
 
+    public class LicenseComparator implements Comparator<License> {
+        @Override
+        public int compare(License license1, License license2) {
+            return license1.getSubject().compareToIgnoreCase(license2.getSubject());
+        }
+    }
+
+    // Move Method Refactoring
     public static void copyStream(InputStream from, OutputStream to) throws IOException {
-        byte[] buf = new byte[1024 * 1024];
-        int len;
-        while ((len = from.read(buf)) > 0) {
-            to.write(buf, 0, len);
-        }
+        StreamUtils.copyStream(from, to); // Move Method
     }
 
+    // Move Method Refactoring
     public static byte[] readStream(InputStream inputStream) throws IOException {
-        try (InputStream in = inputStream) {
-            return readStreamNoClose(in);
-        }
+        return StreamUtils.readStream(inputStream); // Move Method
     }
 
+    // Move Method Refactoring
     public static String readStream(InputStream inputStream, String charset) throws IOException {
-        return new String(readStream(inputStream), charset);
+        return StreamUtils.readStream(inputStream, charset); // Move Method
     }
 
+    // Move Method Refactoring
     public static byte[] readStreamNoClose(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        copyStream(inputStream, buffer);
-        return buffer.toByteArray();
+        return StreamUtils.readStreamNoClose(inputStream); // Move Method
     }
 
 

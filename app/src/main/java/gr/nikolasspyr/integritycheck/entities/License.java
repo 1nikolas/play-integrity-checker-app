@@ -10,4 +10,5 @@ public class License {
         this.text = text;
     }
 
+
 }
