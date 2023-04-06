@@ -20,7 +20,8 @@ import gr.nikolasspyr.integritycheck.entities.License;
 import gr.nikolasspyr.integritycheck.entities.StreamUtils;  // Move Method
 
 public class LicensesViewModel extends AndroidViewModel {
-
+    
+    // Rename method/variable Refactoring
     // Changing the variable name to NumberOfLincenses instead of mlicences as the variable doesnt make sense
     private final MutableLiveData<List<License>> NumberOfLincenses = new MutableLiveData<>();  
     // Changing the variable name to AreLicensesLoading instead of AreLicensesLoading as the variable doesnt make sense
