@@ -79,6 +79,7 @@ public class LicensesViewModel extends AndroidViewModel {
         Collections.sort(licenses, new LicenseComparator());
     }
 
+    // Example of Extract class
     public class LicenseComparator implements Comparator<License> {
         @Override
         public int compare(License license1, License license2) {
