@@ -3,7 +3,7 @@
     <string name="ok">OK</string>
     <string name="check">檢查</string>
     <string name="licenses">許可證書</string>
-    <string name="about_text">作者：Nikolas Spiridakis\n版本：{name} ({code})</string>
+    <string name="about_text">作者：Nikolas Spiridakis\n版本：%s (%d)</string>
     <string name="about">關於</string>
     <string name="no_browser_found">找不到瀏覽器！</string>
     <string name="status_unknown">未知</string>

@@ -9,6 +9,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Locale;
+
 import gr.nikolasspyr.integritycheck.BuildConfig;
 import gr.nikolasspyr.integritycheck.R;
 import gr.nikolasspyr.integritycheck.Utils;
@@ -33,7 +35,7 @@ public class AboutDialog {
 
         TextView aboutText = dialogView.findViewById(R.id.about_text);
 
-        aboutText.setText(context.getResources().getString(R.string.about_text).replace("{name}", BuildConfig.VERSION_NAME).replace("{code}", String.valueOf(BuildConfig.VERSION_CODE)));
+        aboutText.setText(String.format(Locale.US, context.getResources().getString(R.string.about_text), BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
 
         MaterialButton githubBtn = dialogView.findViewById(R.id.about_github);
         MaterialButton licensesBtn = dialogView.findViewById(R.id.about_licenses);
