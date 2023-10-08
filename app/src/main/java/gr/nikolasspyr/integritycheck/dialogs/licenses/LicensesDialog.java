@@ -1,4 +1,4 @@
-package gr.nikolasspyr.integritycheck.dialogs;
+package gr.nikolasspyr.integritycheck.dialogs.licenses;
 
 import android.content.Context;
 import android.view.View;
@@ -12,8 +12,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import gr.nikolasspyr.integritycheck.R;
-import gr.nikolasspyr.integritycheck.adapters.LicensesAdapter;
-import gr.nikolasspyr.integritycheck.viewmodels.LicensesViewModel;
 
 
 public class LicensesDialog {

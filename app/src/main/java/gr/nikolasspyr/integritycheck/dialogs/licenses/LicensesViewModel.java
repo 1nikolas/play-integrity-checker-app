@@ -1,4 +1,4 @@
-package gr.nikolasspyr.integritycheck.viewmodels;
+package gr.nikolasspyr.integritycheck.dialogs.licenses;
 
 import android.app.Application;
 import android.content.res.AssetManager;
@@ -15,8 +15,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import gr.nikolasspyr.integritycheck.entities.License;
 
 public class LicensesViewModel extends AndroidViewModel {
 
@@ -48,6 +46,7 @@ public class LicensesViewModel extends AndroidViewModel {
                 String licensesDir = "licenses";
 
                 String[] rawLicenses = assetManager.list(licensesDir);
+                assert rawLicenses != null;
                 ArrayList<License> licenses = new ArrayList<>(rawLicenses.length);
 
                 for (String rawLicense : rawLicenses)

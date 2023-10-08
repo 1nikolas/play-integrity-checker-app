@@ -3,12 +3,14 @@ plugins {
 }
 
 android {
-    compileSdk 33
 
     defaultConfig {
         applicationId "gr.nikolasspyr.integritycheck"
-        minSdk 21
-        targetSdk 33
+
+        minSdkVersion 21
+        targetSdkVersion 34
+        compileSdk 34
+
         versionCode 10
         versionName "1.0"
 
@@ -37,42 +39,21 @@ android {
     }
     namespace 'gr.nikolasspyr.integritycheck'
 
-    tasks.whenTaskAdded { task ->
-        switch (task.name) {
-            case 'bundleRelease':
-                task.finalizedBy copyMappings
-                break
-        }
-    }
-
-}
-
-task copyMappingsToReleases(type: Copy) {
-    from "${rootDir}/app/build/outputs/mapping/release/mapping.txt"
-    into "${rootDir}/app/release"
-}
-
-task copyMappings(type: Copy, dependsOn: [copyMappingsToReleases]) {
-    from "${rootDir}/app/build/outputs/mapping/release/mapping.txt"
-    into "${rootDir}/app/mappings"
-    rename { String fileName ->
-        "mapping-${android.defaultConfig.versionName}-build-${android.defaultConfig.versionCode}.txt"
-    }
 }
 
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation('com.google.android.play:integrity:1.0.1') {
-        exclude group: 'com.android.support', module: 'support-compat'
-    }
+    implementation('com.google.android.play:integrity:1.2.0')// {
+    //    exclude group: 'com.android.support', module: 'support-compat'
+    //}
 
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
 }

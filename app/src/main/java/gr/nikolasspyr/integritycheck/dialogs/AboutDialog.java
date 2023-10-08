@@ -12,6 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import gr.nikolasspyr.integritycheck.BuildConfig;
 import gr.nikolasspyr.integritycheck.R;
 import gr.nikolasspyr.integritycheck.Utils;
+import gr.nikolasspyr.integritycheck.dialogs.licenses.LicensesDialog;
 
 
 public class AboutDialog {
