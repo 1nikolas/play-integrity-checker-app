@@ -281,8 +281,8 @@ public class MainActivity extends AppCompatActivity {
                 return "The Play Store needs to be updated.\n\n" +
                         "Try updating Google Play Store.";
             case IntegrityErrorCode.TOO_MANY_REQUESTS:
-                return "The calling app is making too many requests to the API and hence is throttled.\n\n" +
-                        "This shouldn't happen. If it does please open an issue on Github.";
+                return "This app has hit the 10k tests/day limit.\n\n" +
+                        "Try again at midnight (12:00 PT).";
             default:
                 return "Unknown Error";
         }
