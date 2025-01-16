@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -17,7 +18,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -56,8 +61,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.app_name);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            ViewCompat.setOnApplyWindowInsetsListener(
+                    findViewById(android.R.id.content),
+                    (view, insets) -> {
+                        Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                        view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                        return insets;
+                    }
+            );
         }
 
         btn = findViewById(R.id.check_btn);
@@ -72,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
             toggleButtonLoading(true);
 
             jsonResponse = null;
-            legacySwitch.setVisibility(View.GONE);
+            legacyLayout.setVisibility(View.GONE);
+            legacySwitch.setEnabled(true);
 
             integrityState = new Integer[]{-1, -1, -1};
             legacyIntegrityState = new Integer[]{-1, -1, -1};
@@ -127,20 +147,20 @@ public class MainActivity extends AppCompatActivity {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .get()
-                    .url(BuildConfig.API_URL + "/api/check?testing=true&token=" + token)
+                    .url(BuildConfig.API_URL + "/api/check?token=" + token)
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
                     hasError = true;
-                    errorTexts = new Pair<>("Api request error", "Error code: " + response.code());
+                    errorTexts = new Pair<>("API request error", "Error code: " + response.code());
                     return null;
                 }
                 ResponseBody responseBody = response.body();
 
                 if (responseBody == null) {
                     hasError = true;
-                    errorTexts = new Pair<>("Api request error", "Empty response");
+                    errorTexts = new Pair<>("API request error", "Empty response");
                     return null;
                 }
 
@@ -148,13 +168,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (json.has("error")) {
                     hasError = true;
-                    errorTexts = new Pair<>("Api request error", json.getString("error"));
+                    errorTexts = new Pair<>("API request error", json.getString("error"));
                     return null;
                 }
 
                 if (!json.has("deviceIntegrity")) {
                     hasError = true;
-                    errorTexts = new Pair<>("Api request error", "Response does not contain deviceIntegrity");
+                    errorTexts = new Pair<>("API request error", "Response does not contain deviceIntegrity");
                     return null;
                 }
 
@@ -177,17 +197,28 @@ public class MainActivity extends AppCompatActivity {
                 showErrorDialog(errorTexts.first, errorTexts.second);
             } else {
                 try {
-                    integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
-                    setIcons(integrityState);
-
-                    if (hasLegacy(result)){
+                    if (!hasCurrent(result) && noLegacy(result)) {
+                        showErrorDialog("Integrity Error", "Integrity API did not return device Integrity results");
+                    } else if (noLegacy(result)) {
+                        integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
+                        setIcons(integrityState);
+                        legacyLayout.setVisibility(View.GONE);
+                        legacyIntegrityState = new Integer[]{-1, -1, -1};
+                    } else if (hasCurrent(result)) {
+                        integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
+                        setIcons(integrityState);
                         legacyLayout.setVisibility(View.VISIBLE);
                         legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
                         legacySwitch.setChecked(true);
+                        legacySwitch.setEnabled(true);
                     } else {
-                        legacyLayout.setVisibility(View.GONE);
-                        legacyIntegrityState = new Integer[]{-1, -1, -1};
+                        legacyLayout.setVisibility(View.VISIBLE);
+                        legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
+                        setIcons(legacyIntegrityState);
+                        legacySwitch.setChecked(false);
+                        legacySwitch.setEnabled(false);
                     }
+
                 } catch (Exception e){
                     onBackgroundError(e);
                 }
@@ -252,8 +283,12 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private boolean hasLegacy(JSONObject deviceIntegrity) {
-        return deviceIntegrity.has("legacyDeviceRecognitionVerdict");
+    private boolean noLegacy(JSONObject deviceIntegrity) {
+        return !deviceIntegrity.has("legacyDeviceRecognitionVerdict");
+    }
+
+    private boolean hasCurrent(JSONObject deviceIntegrity) {
+        return deviceIntegrity.has("deviceRecognitionVerdict");
     }
 
     private Integer[] parseValues(String integrity) {
