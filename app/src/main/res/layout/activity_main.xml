@@ -6,91 +6,147 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/device_integrity_icon"
+   <LinearLayout
+       android:id="@+id/legacy_toggle"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginBottom="5dp"
+       android:visibility="gone"
+       app:layout_constraintLeft_toLeftOf="parent"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintBottom_toTopOf="@id/integrity_texts_layout">
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:layout_marginLeft="5dp"
+           android:layout_marginRight="5dp"
+           android:gravity="center"
+           android:text="@string/legacy_checks"
+           android:textColor="?colorOnPrimary"
+           android:textSize="16sp" />
+
+       <com.google.android.material.switchmaterial.SwitchMaterial
+           android:id="@+id/legacy_switch"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:paddingStart="12dp"
+           android:paddingEnd="12dp"
+           android:checked="true" />
+
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:layout_marginLeft="5dp"
+           android:layout_marginRight="5dp"
+           android:gravity="center"
+           android:text="@string/new_checks"
+           android:textColor="?colorOnPrimary"
+           android:textSize="16sp" />
+
+       <androidx.appcompat.widget.AppCompatImageView
+           android:id="@+id/new_checks_info"
+           android:layout_width="14sp"
+           android:layout_height="match_parent"
+           android:layout_gravity="center"
+           android:alpha="0.7"
+           app:srcCompat="@drawable/ic_help" />
+
+   </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/integrity_icons_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_unknown"
-        android:contentDescription="@string/status_unknown"
-        app:layout_constraintBottom_toTopOf="@id/basic_integrity_icon"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/integrity_texts_layout"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/device_integrity_text"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintRight_toLeftOf="@id/integrity_texts_layout"
+        app:layout_constraintTop_toTopOf="@id/integrity_texts_layout">
 
-    <ImageView
-        android:id="@+id/basic_integrity_icon"
+        <ImageView
+            android:id="@+id/device_integrity_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/status_unknown"
+            android:src="@drawable/ic_unknown" />
+
+        <ImageView
+            android:id="@+id/basic_integrity_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/status_unknown"
+            android:src="@drawable/ic_unknown" />
+
+        <ImageView
+            android:id="@+id/strong_integrity_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/status_unknown"
+            android:src="@drawable/ic_unknown" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/integrity_texts_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_unknown"
-        android:contentDescription="@string/status_unknown"
-        app:layout_constraintBottom_toTopOf="@id/strong_integrity_icon"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/basic_integrity_text"
-        app:layout_constraintTop_toBottomOf="@id/device_integrity_icon" />
-
-    <ImageView
-        android:id="@+id/strong_integrity_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_unknown"
-        android:contentDescription="@string/status_unknown"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/check_btn"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/strong_integrity_text"
-        app:layout_constraintTop_toBottomOf="@id/basic_integrity_icon" />
-
-
-    <TextView
-        android:id="@+id/device_integrity_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:text=" MEETS_DEVICE_INTEGRITY "
-        android:textColor="?colorOnPrimary"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/device_integrity_icon"
-        app:layout_constraintLeft_toRightOf="@id/device_integrity_icon"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toRightOf="@id/integrity_icons_layout"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/device_integrity_icon"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed">
 
-    <TextView
-        android:id="@+id/basic_integrity_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:text="  MEETS_BASIC_INTEGRITY  "
-        android:textColor="?colorOnPrimary"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/basic_integrity_icon"
-        app:layout_constraintLeft_toRightOf="@id/basic_integrity_icon"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/basic_integrity_icon"
-        tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/device_integrity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="68dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="MEETS_DEVICE_INTEGRITY"
+            android:textColor="?colorOnPrimary"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
 
-    <TextView
-        android:id="@+id/strong_integrity_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="10dp"
-        android:text="MEETS_STRONG_INTEGRITY"
-        android:textColor="?colorOnPrimary"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@id/strong_integrity_icon"
-        app:layout_constraintLeft_toRightOf="@id/strong_integrity_icon"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/strong_integrity_icon"
-        tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/basic_integrity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="68dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="MEETS_BASIC_INTEGRITY"
+            android:textColor="?colorOnPrimary"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/strong_integrity_text"
+            android:layout_width="wrap_content"
+            android:layout_height="68dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="MEETS_STRONG_INTEGRITY"
+            android:textColor="?colorOnPrimary"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/check_btn"
@@ -104,7 +160,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/strong_integrity_icon"
+        app:layout_constraintTop_toBottomOf="@id/integrity_texts_layout"
+        app:layout_constraintVertical_bias="0.5"
         app:rippleColor="?colorSecondary" />
 
 
