@@ -20,5 +20,5 @@
     <string name="docs_link">https://developer.android.com/google/play/integrity/verdict#device-integrity-field</string>
     <string name="new_checks_info">https://developer.android.com/google/play/integrity/improvements</string>
     <string name="legacy_checks">Legacy Checks</string>
-    <string name="new_checks">New A13 Checks</string>
+    <string name="new_checks">New A13+ Checks</string>
 </resources>

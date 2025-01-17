@@ -31,21 +31,25 @@
 
         <LinearLayout
             android:id="@+id/legacy_toggle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:weightSum="3"
+            android:gravity="center"
             android:visibility="gone"
+            android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toTopOf="@id/integrity_texts_layout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:gravity="center"
+                android:singleLine="false"
                 android:text="@string/legacy_checks"
                 android:textColor="?colorOnPrimary"
                 android:textSize="16sp" />
@@ -55,16 +59,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                android:gravity="center"
+
+                android:layout_gravity="center"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:gravity="center"
+                android:singleLine="false"
                 android:text="@string/new_checks"
                 android:textColor="?colorOnPrimary"
                 android:textSize="16sp" />
