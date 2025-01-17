@@ -21,4 +21,6 @@
     <string name="new_checks_info">https://developer.android.com/google/play/integrity/improvements</string>
     <string name="legacy_checks">Legacy Checks</string>
     <string name="new_checks">New A13+ Checks</string>
+    <string name="copy_json">Copy JSON</string>
+    <string name="copied">Copied to clipboard!</string>
 </resources>

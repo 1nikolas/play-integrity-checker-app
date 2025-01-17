@@ -1,5 +1,7 @@
 package gr.nikolasspyr.integritycheck;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Animatable;
@@ -412,8 +414,13 @@ public class MainActivity extends AppCompatActivity {
                 new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
                         .setTitle(R.string.json_response)
                         .setCancelable(true)
-                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-
+                        .setPositiveButton(R.string.ok, null)
+                        .setNeutralButton(R.string.copy_json, (dialogInterface, i) -> {
+                            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText("", jsonResponse);
+                            clipboard.setPrimaryClip(clip);
+                            dialogInterface.dismiss();
+                            Toast.makeText(MainActivity.this, getString(R.string.copied), Toast.LENGTH_SHORT).show();
                         })
                         .setMessage(jsonResponse)
                         .show();
