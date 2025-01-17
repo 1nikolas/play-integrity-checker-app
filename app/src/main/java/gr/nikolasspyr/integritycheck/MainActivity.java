@@ -1,14 +1,13 @@
 package gr.nikolasspyr.integritycheck;
 
 import android.content.Context;
-import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +25,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.play.core.integrity.IntegrityManager;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                         legacySwitch.setEnabled(false);
                     }
 
-                } catch (Exception e){
+                } catch (Exception e) {
                     onBackgroundError(e);
                 }
             }
@@ -232,16 +233,13 @@ public class MainActivity extends AppCompatActivity {
         btn.setEnabled(!isLoading);
     }
 
-    private Drawable getProgressBarDrawable(final Context context) {
-        TypedValue value = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.progressBarStyleSmall, value, false);
-        int progressBarStyle = value.data;
-        int[] attributes = new int[]{android.R.attr.indeterminateDrawable};
-        TypedArray typedArray = context.obtainStyledAttributes(progressBarStyle, attributes);
-        Drawable drawable = typedArray.getDrawable(0);
-        typedArray.recycle();
-
-        return drawable;
+    private Drawable getProgressBarDrawable(Context context) {
+        CircularProgressIndicator drawable = new CircularProgressIndicator(context);
+        drawable.setIndicatorSize(48);
+        drawable.setTrackThickness(5);
+        drawable.setIndicatorColor(MaterialColors.getColor(context, com.google.android.material.R.attr.colorSecondary, Color.BLUE));
+        drawable.setIndeterminate(true);
+        return drawable.getIndeterminateDrawable();
     }
 
     private void setButtonLoading(MaterialButton button, boolean loading) {
@@ -253,10 +251,11 @@ public class MainActivity extends AppCompatActivity {
             Drawable drawable = button.getIcon();
             if (!(drawable instanceof Animatable)) {
                 drawable = getProgressBarDrawable(button.getContext());
-
-                button.setIcon(drawable);
+                if (drawable instanceof Animatable) {
+                    button.setIcon(drawable);
+                    ((Animatable) drawable).start();
+                }
             }
-            ((Animatable) drawable).start();
         } else {
             button.setIcon(null);
         }
@@ -332,16 +331,14 @@ public class MainActivity extends AppCompatActivity {
                     The calling app is not installed.
                     
                     This shouldn't happen. If it does please open an issue on Github.""";
-            case IntegrityErrorCode.APP_UID_MISMATCH ->
-                    """
-                            The calling app UID (user id) does not match the one from Package Manager.
-                            
-                            This shouldn't happen. If it does please open an issue on Github.""";
-            case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE ->
-                    """
-                            Binding to the service in the Play Store has failed.
-                            
-                            This can be due to having an old Play Store version installed on the device.""";
+            case IntegrityErrorCode.APP_UID_MISMATCH -> """
+                    The calling app UID (user id) does not match the one from Package Manager.
+                    
+                    This shouldn't happen. If it does please open an issue on Github.""";
+            case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE -> """
+                    Binding to the service in the Play Store has failed.
+                    
+                    This can be due to having an old Play Store version installed on the device.""";
             case IntegrityErrorCode.CLIENT_TRANSIENT_ERROR ->
                     "There was a transient error in the client device.";
             case IntegrityErrorCode.CLOUD_PROJECT_NUMBER_IS_INVALID ->
@@ -353,11 +350,10 @@ public class MainActivity extends AppCompatActivity {
                     No available network is found.
                     
                     Please check your connection.""";
-            case IntegrityErrorCode.NONCE_IS_NOT_BASE64 ->
-                    """
-                            Nonce is not encoded as a base64 web-safe no-wrap string.
-                            
-                            This shouldn't happen. If it does please open an issue on Github.""";
+            case IntegrityErrorCode.NONCE_IS_NOT_BASE64 -> """
+                    Nonce is not encoded as a base64 web-safe no-wrap string.
+                    
+                    This shouldn't happen. If it does please open an issue on Github.""";
             case IntegrityErrorCode.NONCE_TOO_LONG -> "Nonce length is too long.\n" +
                     "This shouldn't happen. If it does please open an issue on Github.";
             case IntegrityErrorCode.NONCE_TOO_SHORT -> "Nonce length is too short.\n" +
@@ -366,36 +362,30 @@ public class MainActivity extends AppCompatActivity {
                     No error has occurred.
                     
                     If you ever get this, congrats, I have no idea what it means.""";
-            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND ->
-                    """
-                            Play Services is not available or version is too old.
-                            
-                            Try installing or updating Google Play Services.""";
-            case IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED ->
-                    """
-                            Play Services needs to be updated.
-                            
-                            Try updating Google Play Services.""";
-            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND ->
-                    """
-                            No Play Store account is found on device.
-                            
-                            Try logging into Play Store.""";
-            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND ->
-                    """
-                            No Play Store app is found on device or not official version is installed.
-                            
-                            This app can't work without Play Store.""";
-            case IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED ->
-                    """
-                            The Play Store needs to be updated.
-                            
-                            Try updating Google Play Store.""";
-            case IntegrityErrorCode.TOO_MANY_REQUESTS ->
-                    """
-                            Google sets a daily limit of checks on all apps that use the Integrity API. That limit has been reached for today.
-                            
-                            Try again at midnight (12:00am PT).""";
+            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND -> """
+                    Play Services is not available or version is too old.
+                    
+                    Try installing or updating Google Play Services.""";
+            case IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED -> """
+                    Play Services needs to be updated.
+                    
+                    Try updating Google Play Services.""";
+            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND -> """
+                    No Play Store account is found on device.
+                    
+                    Try logging into Play Store.""";
+            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND -> """
+                    No Play Store app is found on device or not official version is installed.
+                    
+                    This app can't work without Play Store.""";
+            case IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED -> """
+                    The Play Store needs to be updated.
+                    
+                    Try updating Google Play Store.""";
+            case IntegrityErrorCode.TOO_MANY_REQUESTS -> """
+                    Google sets a daily limit of checks on all apps that use the Integrity API. That limit has been reached for today.
+                    
+                    Try again at midnight (12:00am PT).""";
             default -> "Unknown Error";
         };
     }
