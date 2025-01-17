@@ -1,208 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/Theme.PlayIntegrityAPIChecker" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            android:theme="@style/Theme.PlayIntegrityAPIChecker"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.12"
+        android:background="?colorOnSurface" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:alpha="0.12"
-            android:background="?colorOnSurface"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <LinearLayout
-            android:id="@+id/legacy_toggle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toTopOf="@id/integrity_texts_layout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/legacy_toggle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:weightSum="3"
                 android:gravity="center"
-                android:singleLine="false"
-                android:text="@string/legacy_checks"
-                android:textColor="?colorOnPrimary"
-                android:textSize="16sp" />
+                android:visibility="gone"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@id/integrity_texts_layout"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/legacy_switch"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"
+                    android:singleLine="false"
+                    android:text="@string/legacy_checks"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="16sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/legacy_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:gravity="center"
+
+                    android:layout_gravity="center"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"
+                    android:singleLine="false"
+                    android:text="@string/new_checks"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/new_checks_info"
+                    android:layout_width="14sp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:alpha="0.7"
+                    app:srcCompat="@drawable/ic_help" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/integrity_icons_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBottom_toBottomOf="@id/integrity_texts_layout"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/integrity_texts_layout"
+                app:layout_constraintTop_toTopOf="@id/integrity_texts_layout"
+                tools:ignore="RtlHardcoded">
 
-                android:layout_gravity="center"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
+                <ImageView
+                    android:id="@+id/device_integrity_icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="10dp"
+                    android:contentDescription="@string/status_unknown"
+                    android:src="@drawable/ic_unknown" />
 
-            <TextView
+                <ImageView
+                    android:id="@+id/basic_integrity_icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="10dp"
+                    android:contentDescription="@string/status_unknown"
+                    android:src="@drawable/ic_unknown" />
+
+                <ImageView
+                    android:id="@+id/strong_integrity_icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="10dp"
+                    android:contentDescription="@string/status_unknown"
+                    android:src="@drawable/ic_unknown" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/integrity_texts_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:singleLine="false"
-                android:text="@string/new_checks"
-                android:textColor="?colorOnPrimary"
-                android:textSize="16sp" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/new_checks_info"
-                android:layout_width="14sp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:alpha="0.7"
-                app:srcCompat="@drawable/ic_help" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/integrity_icons_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp"
-            app:layout_constraintBottom_toBottomOf="@id/integrity_texts_layout"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/integrity_texts_layout"
-            app:layout_constraintTop_toTopOf="@id/integrity_texts_layout"
-            tools:ignore="RtlHardcoded">
-
-            <ImageView
-                android:id="@+id/device_integrity_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="10dp"
-                android:contentDescription="@string/status_unknown"
-                android:src="@drawable/ic_unknown" />
-
-            <ImageView
-                android:id="@+id/basic_integrity_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="10dp"
-                android:contentDescription="@string/status_unknown"
-                android:src="@drawable/ic_unknown" />
-
-            <ImageView
-                android:id="@+id/strong_integrity_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="10dp"
-                android:contentDescription="@string/status_unknown"
-                android:src="@drawable/ic_unknown" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/integrity_texts_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginRight="10dp"
-            app:layout_constraintBottom_toTopOf="@id/check_btn"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toRightOf="@id/integrity_icons_layout"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_default="wrap"
-            tools:ignore="RtlHardcoded">
-
-            <TextView
-                android:id="@+id/device_integrity_text"
-                android:layout_width="wrap_content"
-                android:layout_height="68dp"
-                android:layout_marginLeft="10dp"
+                android:orientation="vertical"
                 android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="MEETS_DEVICE_INTEGRITY"
-                android:textColor="?colorOnPrimary"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText" />
+                app:layout_constraintBottom_toTopOf="@id/check_btn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintLeft_toRightOf="@id/integrity_icons_layout"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintWidth_default="wrap"
+                tools:ignore="RtlHardcoded">
 
-            <TextView
-                android:id="@+id/basic_integrity_text"
+                <TextView
+                    android:id="@+id/device_integrity_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="68dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="MEETS_DEVICE_INTEGRITY"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/basic_integrity_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="68dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="MEETS_BASIC_INTEGRITY"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/strong_integrity_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="68dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="MEETS_STRONG_INTEGRITY"
+                    android:textColor="?colorOnPrimary"
+                    android:textSize="18sp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/check_btn"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="68dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="MEETS_BASIC_INTEGRITY"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/check"
                 android:textColor="?colorOnPrimary"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText" />
+                app:iconTint="?colorSecondary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/integrity_texts_layout"
+                app:layout_constraintVertical_bias="0.5"
+                app:rippleColor="?colorSecondary" />
 
-            <TextView
-                android:id="@+id/strong_integrity_text"
-                android:layout_width="wrap_content"
-                android:layout_height="68dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="MEETS_STRONG_INTEGRITY"
-                android:textColor="?colorOnPrimary"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/check_btn"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/check"
-            android:textColor="?colorOnPrimary"
-            app:iconTint="?colorSecondary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/integrity_texts_layout"
-            app:layout_constraintVertical_bias="0.5"
-            app:rippleColor="?colorSecondary" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</LinearLayout>
