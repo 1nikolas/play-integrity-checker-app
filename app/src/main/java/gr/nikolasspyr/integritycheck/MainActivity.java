@@ -14,12 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView deviceIntegrityIcon;
     private ImageView basicIntegrityIcon;
     private ImageView strongIntegrityIcon;
-    private LinearLayout legacyLayout;
+    private Group legacyLayout;
     private SwitchMaterial legacySwitch;
 
     private String jsonResponse;
