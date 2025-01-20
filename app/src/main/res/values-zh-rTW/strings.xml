@@ -13,5 +13,5 @@
     <string name="json_response">原始 JSON 結果</string>
     <string name="check_first">請先執行檢查！</string>
     <string name="show_documentation">了解檢測結果</string>
-    <string name="docs_link">https://developer.android.com/google/play/integrity/verdict#device-integrity-field</string>
+    <string name="docs_link">https://developer.android.com/google/play/integrity/verdicts#optional-device-labels</string>
 </resources>

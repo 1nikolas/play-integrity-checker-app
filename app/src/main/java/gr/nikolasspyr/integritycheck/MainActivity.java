@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         deviceIntegrityIcon = findViewById(R.id.device_integrity_icon);
         basicIntegrityIcon = findViewById(R.id.basic_integrity_icon);
         strongIntegrityIcon = findViewById(R.id.strong_integrity_icon);
-        legacyLayout = findViewById(R.id.legacy_toggle);
+        legacyLayout = findViewById(R.id.legacy_row);
         legacySwitch = findViewById(R.id.legacy_switch);
 
 
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             jsonResponse = null;
             legacyLayout.setVisibility(View.GONE);
             legacySwitch.setEnabled(true);
+            legacySwitch.setClickable(true);
 
             integrityState = new Integer[]{-1, -1, -1};
             legacyIntegrityState = new Integer[]{-1, -1, -1};
@@ -112,6 +113,13 @@ public class MainActivity extends AppCompatActivity {
                 setIcons(legacyIntegrityState);
             }
         });
+
+        findViewById(R.id.legacy_switch_layout).setOnClickListener(view -> {
+            if (!legacySwitch.isEnabled()){
+                Toast.makeText(MainActivity.this, R.string.no_new_result, Toast.LENGTH_LONG).show();
+            }
+        });
+
 
         ImageView newChecksInfo = findViewById(R.id.new_checks_info);
         newChecksInfo.setOnClickListener(view -> Utils.openLink(getString(R.string.new_checks_info), MainActivity.this));
@@ -214,12 +222,14 @@ public class MainActivity extends AppCompatActivity {
                         legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
                         legacySwitch.setChecked(true);
                         legacySwitch.setEnabled(true);
+                        legacySwitch.setClickable(true);
                     } else {
                         legacyLayout.setVisibility(View.VISIBLE);
                         legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
                         setIcons(legacyIntegrityState);
                         legacySwitch.setChecked(false);
                         legacySwitch.setEnabled(false);
+                        legacySwitch.setClickable(false);
                     }
 
                 } catch (Exception e) {
