@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:constraint_referenced_ids="legacy_checks_text,legacy_switch_layout,new_checks"
+                app:constraint_referenced_ids="legacy_checks_text,legacy_switch,new_checks"
                 tools:visibility="visible" />
 
             <TextView
@@ -85,42 +85,35 @@
                 android:textColor="?colorOnPrimary"
                 android:textSize="16sp"
                 app:layout_constraintLeft_toRightOf="@id/left_barrier"
-                app:layout_constraintBottom_toBottomOf="@id/legacy_switch_layout"
-                app:layout_constraintRight_toLeftOf="@id/legacy_switch_layout"
-                app:layout_constraintTop_toTopOf="@id/legacy_switch_layout"/>
+                app:layout_constraintBottom_toBottomOf="@id/legacy_switch"
+                app:layout_constraintRight_toLeftOf="@id/legacy_switch"
+                app:layout_constraintTop_toTopOf="@id/legacy_switch"/>
 
-            <FrameLayout
-                android:id="@+id/legacy_switch_layout"
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/legacy_switch"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
                 android:layout_marginBottom="5dp"
                 app:layout_constraintTop_toBottomOf="@id/switch_barrier"
                 app:layout_constraintLeft_toRightOf="@id/guideline"
                 app:layout_constraintRight_toLeftOf="@id/guideline"
-                app:layout_constraintBottom_toTopOf="@id/integrity_texts_layout">
+                app:layout_constraintBottom_toTopOf="@id/integrity_texts_layout"/>
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/legacy_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:checked="true"
-                    android:gravity="center"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp" />
-            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/new_checks"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintLeft_toRightOf="@id/legacy_switch_layout"
+                app:layout_constraintLeft_toRightOf="@id/legacy_switch"
                 app:layout_constraintRight_toLeftOf="@id/right_barrier"
-                app:layout_constraintBottom_toBottomOf="@id/legacy_switch_layout"
-                app:layout_constraintTop_toTopOf="@id/legacy_switch_layout">
+                app:layout_constraintBottom_toBottomOf="@id/legacy_switch"
+                app:layout_constraintTop_toTopOf="@id/legacy_switch">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

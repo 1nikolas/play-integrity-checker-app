@@ -95,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
             jsonResponse = null;
             legacyLayout.setVisibility(View.GONE);
-            legacySwitch.setEnabled(true);
-            legacySwitch.setClickable(true);
 
             integrityState = new Integer[]{-1, -1, -1};
             legacyIntegrityState = new Integer[]{-1, -1, -1};
@@ -111,12 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 setIcons(integrityState);
             } else {
                 setIcons(legacyIntegrityState);
-            }
-        });
-
-        findViewById(R.id.legacy_switch_layout).setOnClickListener(view -> {
-            if (!legacySwitch.isEnabled()){
-                Toast.makeText(MainActivity.this, R.string.no_new_result, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -184,9 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (!json.has("deviceIntegrity")) {
-                    hasError = true;
-                    errorTexts = new Pair<>("API request error", "Response does not contain deviceIntegrity");
-                    return null;
+                    return new JSONObject();
                 }
 
                 jsonResponse = json.toString(4);
@@ -209,27 +199,32 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 try {
                     if (!hasCurrent(result) && noLegacy(result)) {
-                        showErrorDialog("Integrity Error", "Integrity API did not return device Integrity results");
+                        integrityState = parseValues("");
+                        legacyIntegrityState = parseValues("");
+
+                        setIcons(integrityState);
+                        legacyLayout.setVisibility(View.VISIBLE);
+                        legacySwitch.setChecked(true);
                     } else if (noLegacy(result)) {
                         integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
+                        legacyIntegrityState = parseValues("");
+
                         setIcons(integrityState);
                         legacyLayout.setVisibility(View.GONE);
-                        legacyIntegrityState = new Integer[]{-1, -1, -1};
                     } else if (hasCurrent(result)) {
                         integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
+                        legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
+
                         setIcons(integrityState);
                         legacyLayout.setVisibility(View.VISIBLE);
-                        legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
                         legacySwitch.setChecked(true);
-                        legacySwitch.setEnabled(true);
-                        legacySwitch.setClickable(true);
                     } else {
-                        legacyLayout.setVisibility(View.VISIBLE);
+                        integrityState = parseValues("");
                         legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
-                        setIcons(legacyIntegrityState);
-                        legacySwitch.setChecked(false);
-                        legacySwitch.setEnabled(false);
-                        legacySwitch.setClickable(false);
+
+                        setIcons(integrityState);
+                        legacyLayout.setVisibility(View.VISIBLE);
+                        legacySwitch.setChecked(true);
                     }
 
                 } catch (Exception e) {
@@ -303,6 +298,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Integer[] parseValues(String integrity) {
+        if (integrity.isEmpty()) {
+            return new Integer[]{0, 0, 0};
+        }
         return new Integer[]{integrity.contains("MEETS_DEVICE_INTEGRITY") ? 1 : 0, integrity.contains("MEETS_BASIC_INTEGRITY") ? 1 : 0, integrity.contains("MEETS_STRONG_INTEGRITY") ? 1 : 0};
     }
 
