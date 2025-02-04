@@ -202,9 +202,9 @@ public class MainActivity extends AppCompatActivity {
                         integrityState = parseValues("");
                         legacyIntegrityState = parseValues("");
 
-                        setIcons(integrityState);
+                        setIcons(legacyIntegrityState);
                         legacyLayout.setVisibility(View.VISIBLE);
-                        legacySwitch.setChecked(true);
+                        legacySwitch.setChecked(false);
                     } else if (noLegacy(result)) {
                         integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
                         legacyIntegrityState = parseValues("");
@@ -215,16 +215,16 @@ public class MainActivity extends AppCompatActivity {
                         integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
                         legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
 
-                        setIcons(integrityState);
+                        setIcons(legacyIntegrityState);
                         legacyLayout.setVisibility(View.VISIBLE);
-                        legacySwitch.setChecked(true);
+                        legacySwitch.setChecked(false);
                     } else {
                         integrityState = parseValues("");
                         legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
 
-                        setIcons(integrityState);
+                        setIcons(legacyIntegrityState);
                         legacyLayout.setVisibility(View.VISIBLE);
-                        legacySwitch.setChecked(true);
+                        legacySwitch.setChecked(false);
                     }
 
                 } catch (Exception e) {
