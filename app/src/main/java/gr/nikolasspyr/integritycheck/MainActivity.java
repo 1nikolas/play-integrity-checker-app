@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,14 +32,19 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.play.core.integrity.IntegrityManager;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
+import com.google.android.play.core.integrity.IntegrityServiceException;
 import com.google.android.play.core.integrity.IntegrityTokenRequest;
 import com.google.android.play.core.integrity.IntegrityTokenResponse;
 import com.google.android.play.core.integrity.model.IntegrityErrorCode;
 
 import org.json.JSONObject;
 
-import gr.nikolasspyr.integritycheck.async.AsyncTask;
+import java.io.IOException;
+import java.util.Locale;
+
 import gr.nikolasspyr.integritycheck.dialogs.AboutDialog;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -124,116 +128,129 @@ public class MainActivity extends AppCompatActivity {
         IntegrityManager integrityManager = IntegrityManagerFactory.create(getApplicationContext());
 
         // Request the integrity token by providing a nonce.
-        Task<IntegrityTokenResponse> integrityTokenResponse = integrityManager.requestIntegrityToken(
+        Task<IntegrityTokenResponse> integrityTokenResponseTask = integrityManager.requestIntegrityToken(
                 IntegrityTokenRequest.builder()
                         .setNonce(nonce)
                         .build());
 
-        integrityTokenResponse.addOnSuccessListener(integrityTokenResponse1 -> {
-            String integrityToken = integrityTokenResponse1.token();
-            new getTokenResponse().execute(integrityToken);
-        });
+        integrityTokenResponseTask.addOnSuccessListener(integrityTokenResponse -> sendTokenRequest(integrityTokenResponse.token()));
 
-        integrityTokenResponse.addOnFailureListener(e -> {
+        integrityTokenResponseTask.addOnFailureListener(e -> {
             toggleButtonLoading(false);
-            showErrorDialog("Error getting token from Google", getErrorText(e));
+
+            String errorMessage;
+            if (e instanceof IntegrityServiceException) {
+                errorMessage = getErrorMessageText((IntegrityServiceException) e);
+            } else {
+                errorMessage = e.getMessage();
+            }
+
+            showErrorDialog(getString(R.string.token_error_title), errorMessage);
         });
     }
 
-    private class getTokenResponse extends AsyncTask<String, Integer, JSONObject> {
+    private void sendTokenRequest(String token) {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .get()
+                .url(BuildConfig.API_URL + "/api/check?token=" + token)
+                .build();
 
-        private boolean hasError = false;
-        private Pair<String, String> errorTexts;
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                onRequestError(e.getMessage());
+            }
 
-        @Override
-        protected JSONObject doInBackground(String token) throws Exception {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .get()
-                    .url(BuildConfig.API_URL + "/api/check?token=" + token)
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    hasError = true;
-                    errorTexts = new Pair<>("API request error", "Error code: " + response.code());
-                    return null;
+                    onRequestError(String.format(Locale.US, getString(R.string.server_api_error_status_code), response.code()));
+                    return;
                 }
+
                 ResponseBody responseBody = response.body();
 
                 if (responseBody == null) {
-                    hasError = true;
-                    errorTexts = new Pair<>("API request error", "Empty response");
-                    return null;
+                    onRequestError(getString(R.string.server_api_error_empty_res));
+                    return;
                 }
 
-                JSONObject json = new JSONObject(responseBody.string());
+                String responseBodyString = responseBody.string();
 
-                if (json.has("error")) {
-                    hasError = true;
-                    errorTexts = new Pair<>("API request error", json.getString("error"));
-                    return null;
-                }
-
-                if (!json.has("deviceIntegrity")) {
-                    return new JSONObject();
-                }
-
-                jsonResponse = json.toString(4);
-                return json.getJSONObject("deviceIntegrity");
-            }
-
-        }
-
-        @Override
-        protected void onBackgroundError(Exception e) {
-            hasError = true;
-            errorTexts = new Pair<>("Api request error", e.getMessage());
-            onPostExecute(null);
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            if (hasError) {
-                showErrorDialog(errorTexts.first, errorTexts.second);
-            } else {
                 try {
-                    if (!hasCurrent(result) && noLegacy(result)) {
-                        integrityState = parseValues("");
-                        legacyIntegrityState = parseValues("");
-
-                        setIcons(legacyIntegrityState);
-                        legacyLayout.setVisibility(View.VISIBLE);
-                        legacySwitch.setChecked(false);
-                    } else if (noLegacy(result)) {
-                        integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
-                        legacyIntegrityState = parseValues("");
-
-                        setIcons(integrityState);
-                        legacyLayout.setVisibility(View.GONE);
-                    } else if (hasCurrent(result)) {
-                        integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
-                        legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
-
-                        setIcons(legacyIntegrityState);
-                        legacyLayout.setVisibility(View.VISIBLE);
-                        legacySwitch.setChecked(false);
-                    } else {
-                        integrityState = parseValues("");
-                        legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
-
-                        setIcons(legacyIntegrityState);
-                        legacyLayout.setVisibility(View.VISIBLE);
-                        legacySwitch.setChecked(false);
-                    }
-
+                    parseResponseJSON(responseBodyString);
                 } catch (Exception e) {
-                    onBackgroundError(e);
+                    onRequestError(e.getMessage());
                 }
+
             }
-            toggleButtonLoading(false);
-        }
+        });
     }
+
+    private void onRequestError(String error) {
+        runOnUiThread(() -> {
+            showErrorDialog(getString(R.string.server_api_error_title), error);
+            toggleButtonLoading(false);
+        });
+    }
+
+    private void parseResponseJSON(String apiResponseJson) throws Exception {
+        JSONObject json = new JSONObject(apiResponseJson);
+
+        if (json.has("error")) {
+            throw new Exception(json.getString("error"));
+        }
+
+        JSONObject result;
+
+        if (json.has("deviceIntegrity")) {
+            result = json.getJSONObject("deviceIntegrity");
+            jsonResponse = json.toString(4);
+        } else {
+            result = new JSONObject();
+        }
+
+        if (!hasCurrent(result) && noLegacy(result)) {
+            integrityState = parseValues("");
+            legacyIntegrityState = parseValues("");
+
+            runOnUiThread(() -> {
+                setIcons(legacyIntegrityState);
+                legacyLayout.setVisibility(View.VISIBLE);
+                legacySwitch.setChecked(false);
+            });
+        } else if (noLegacy(result)) {
+            integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
+            legacyIntegrityState = parseValues("");
+
+            runOnUiThread(() -> {
+                setIcons(integrityState);
+                legacyLayout.setVisibility(View.GONE);
+            });
+        } else if (hasCurrent(result)) {
+            integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
+            legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
+
+            runOnUiThread(() -> {
+                setIcons(legacyIntegrityState);
+                legacyLayout.setVisibility(View.VISIBLE);
+                legacySwitch.setChecked(false);
+            });
+        } else {
+            integrityState = parseValues("");
+            legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
+
+            runOnUiThread(() -> {
+                setIcons(legacyIntegrityState);
+                legacyLayout.setVisibility(View.VISIBLE);
+                legacySwitch.setChecked(false);
+            });
+        }
+
+        runOnUiThread(() -> toggleButtonLoading(false));
+    }
+
 
     private void toggleButtonLoading(boolean isLoading) {
         setButtonLoading(btn, isLoading);
@@ -324,80 +341,126 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getErrorText(Exception e) {
-        String msg = e.getMessage();
-        if (msg == null) {
-            return "Unknown Error";
+    private String getErrorCodeName(int errorCode) {
+        return switch (errorCode) {
+            case IntegrityErrorCode.NO_ERROR -> "NO_ERROR";
+            case IntegrityErrorCode.API_NOT_AVAILABLE -> "API_NOT_AVAILABLE";
+            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND -> "PLAY_STORE_NOT_FOUND";
+            case IntegrityErrorCode.NETWORK_ERROR -> "NETWORK_ERROR";
+            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND -> "PLAY_STORE_ACCOUNT_NOT_FOUND";
+            case IntegrityErrorCode.APP_NOT_INSTALLED -> "APP_NOT_INSTALLED";
+            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND -> "PLAY_SERVICES_NOT_FOUND";
+            case IntegrityErrorCode.APP_UID_MISMATCH -> "APP_UID_MISMATCH";
+            case IntegrityErrorCode.TOO_MANY_REQUESTS -> "TOO_MANY_REQUESTS";
+            case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE -> "CANNOT_BIND_TO_SERVICE";
+            case IntegrityErrorCode.NONCE_TOO_SHORT -> "NONCE_TOO_SHORT";
+            case IntegrityErrorCode.NONCE_TOO_LONG -> "NONCE_TOO_LONG";
+            case IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE -> "GOOGLE_SERVER_UNAVAILABLE";
+            case IntegrityErrorCode.NONCE_IS_NOT_BASE64 -> "NONCE_IS_NOT_BASE64";
+            case IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED -> "PLAY_STORE_VERSION_OUTDATED";
+            case IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED ->
+                    "PLAY_SERVICES_VERSION_OUTDATED";
+            case IntegrityErrorCode.CLOUD_PROJECT_NUMBER_IS_INVALID ->
+                    "CLOUD_PROJECT_NUMBER_IS_INVALID";
+            case IntegrityErrorCode.CLIENT_TRANSIENT_ERROR -> "CLIENT_TRANSIENT_ERROR";
+            case IntegrityErrorCode.INTERNAL_ERROR -> "INTERNAL_ERROR";
+            default -> "UNKNOWN_ERROR_CODE";
+        };
+    }
+
+    private String getErrorReason(int errorCode) {
+        return switch (errorCode) {
+            case IntegrityErrorCode.API_NOT_AVAILABLE ->
+                    getString(R.string.error_reason_api_not_available);
+            case IntegrityErrorCode.APP_NOT_INSTALLED ->
+                    getString(R.string.error_reason_app_not_installed);
+            case IntegrityErrorCode.APP_UID_MISMATCH ->
+                    getString(R.string.error_reason_app_uid_mismatch);
+            case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE ->
+                    getString(R.string.error_reason_cannot_bind_to_service);
+            case IntegrityErrorCode.CLIENT_TRANSIENT_ERROR ->
+                    getString(R.string.error_reason_client_transient_error);
+            case IntegrityErrorCode.CLOUD_PROJECT_NUMBER_IS_INVALID ->
+                    getString(R.string.error_reason_cloud_project_number_is_invalid);
+            case IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE ->
+                    getString(R.string.error_reason_google_server_unavailable);
+            case IntegrityErrorCode.INTERNAL_ERROR ->
+                    getString(R.string.error_reason_internal_error);
+            case IntegrityErrorCode.NETWORK_ERROR -> getString(R.string.error_reason_network_error);
+            case IntegrityErrorCode.NONCE_IS_NOT_BASE64 ->
+                    getString(R.string.error_reason_nonce_is_not_base64);
+            case IntegrityErrorCode.NONCE_TOO_LONG ->
+                    getString(R.string.error_reason_nonce_too_long);
+            case IntegrityErrorCode.NONCE_TOO_SHORT ->
+                    getString(R.string.error_reason_nonce_too_short);
+            case IntegrityErrorCode.NO_ERROR -> "";
+            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND ->
+                    getString(R.string.error_reason_play_services_not_found);
+            case IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED ->
+                    getString(R.string.error_reason_play_services_outdated);
+            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND ->
+                    getString(R.string.error_reason_play_store_account_not_found);
+            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND ->
+                    getString(R.string.error_reason_play_store_not_found);
+            case IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED ->
+                    getString(R.string.error_reason_play_store_version_outdated);
+            case IntegrityErrorCode.TOO_MANY_REQUESTS ->
+                    getString(R.string.error_reason_too_many_requests);
+
+            default -> getString(R.string.error_reason_unknown);
+        };
+    }
+
+    private String getErrorSolution(int errorCode) {
+        return switch (errorCode) {
+            case IntegrityErrorCode.API_NOT_AVAILABLE, IntegrityErrorCode.CANNOT_BIND_TO_SERVICE,
+                 IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED ->
+                    getString(R.string.error_solution_update_play_store);
+            case IntegrityErrorCode.APP_NOT_INSTALLED, IntegrityErrorCode.APP_UID_MISMATCH ->
+                    getString(R.string.error_solution_something_wrong_attack);
+            case IntegrityErrorCode.CLIENT_TRANSIENT_ERROR,
+                 IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE, IntegrityErrorCode.INTERNAL_ERROR ->
+                    getString(R.string.error_solution_try_again);
+            case IntegrityErrorCode.CLOUD_PROJECT_NUMBER_IS_INVALID,
+                 IntegrityErrorCode.NONCE_IS_NOT_BASE64, IntegrityErrorCode.NONCE_TOO_LONG,
+                 IntegrityErrorCode.NONCE_TOO_SHORT, IntegrityErrorCode.NO_ERROR ->
+                    getString(R.string.error_solution_open_issue);
+            case IntegrityErrorCode.NETWORK_ERROR ->
+                    getString(R.string.error_solution_check_connection);
+            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND ->
+                    getString(R.string.error_solution_install_update_play_services);
+            case IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED ->
+                    getString(R.string.error_solution_update_play_services);
+            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND ->
+                    getString(R.string.error_solution_login);
+            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND ->
+                    getString(R.string.error_solution_install_official_play_store);
+            case IntegrityErrorCode.TOO_MANY_REQUESTS ->
+                    getString(R.string.error_solution_try_again_later);
+
+            default -> "";
+        };
+    }
+
+    private String getErrorMessageText(IntegrityServiceException integrityServiceException) {
+        int errorCode = integrityServiceException.getErrorCode();
+
+        StringBuilder errorMessageBuilder = new StringBuilder();
+        errorMessageBuilder.append(String.format(Locale.US, "%s (%d)", getErrorCodeName(errorCode), errorCode));
+
+        String errorReason = getErrorReason(errorCode);
+        if (!errorReason.isEmpty()) {
+            errorMessageBuilder.append("\n");
+            errorMessageBuilder.append(errorReason);
         }
 
-        //Pretty junk way of getting the error code but it works
-        int errorCode = Integer.parseInt(msg.replaceAll("\n", "").replaceAll(":(.*)", ""));
-        return switch (errorCode) {
-            case IntegrityErrorCode.API_NOT_AVAILABLE -> """
-                    Integrity API is not available.
-                    
-                    The Play Store version might be old, try updating it.""";
-            case IntegrityErrorCode.APP_NOT_INSTALLED -> """
-                    The calling app is not installed.
-                    
-                    This shouldn't happen. If it does please open an issue on Github.""";
-            case IntegrityErrorCode.APP_UID_MISMATCH -> """
-                    The calling app UID (user id) does not match the one from Package Manager.
-                    
-                    This shouldn't happen. If it does please open an issue on Github.""";
-            case IntegrityErrorCode.CANNOT_BIND_TO_SERVICE -> """
-                    Binding to the service in the Play Store has failed.
-                    
-                    This can be due to having an old Play Store version installed on the device.""";
-            case IntegrityErrorCode.CLIENT_TRANSIENT_ERROR ->
-                    "There was a transient error in the client device.";
-            case IntegrityErrorCode.CLOUD_PROJECT_NUMBER_IS_INVALID ->
-                    "The provided cloud project number is invalid.";
-            case IntegrityErrorCode.GOOGLE_SERVER_UNAVAILABLE ->
-                    "Unknown internal Google server error.";
-            case IntegrityErrorCode.INTERNAL_ERROR -> "Unknown internal error.";
-            case IntegrityErrorCode.NETWORK_ERROR -> """
-                    No available network is found.
-                    
-                    Please check your connection.""";
-            case IntegrityErrorCode.NONCE_IS_NOT_BASE64 -> """
-                    Nonce is not encoded as a base64 web-safe no-wrap string.
-                    
-                    This shouldn't happen. If it does please open an issue on Github.""";
-            case IntegrityErrorCode.NONCE_TOO_LONG -> "Nonce length is too long.\n" +
-                    "This shouldn't happen. If it does please open an issue on Github.";
-            case IntegrityErrorCode.NONCE_TOO_SHORT -> "Nonce length is too short.\n" +
-                    "This shouldn't happen. If it does please open an issue on Github.";
-            case IntegrityErrorCode.NO_ERROR -> """
-                    No error has occurred.
-                    
-                    If you ever get this, congrats, I have no idea what it means.""";
-            case IntegrityErrorCode.PLAY_SERVICES_NOT_FOUND -> """
-                    Play Services is not available or version is too old.
-                    
-                    Try installing or updating Google Play Services.""";
-            case IntegrityErrorCode.PLAY_SERVICES_VERSION_OUTDATED -> """
-                    Play Services needs to be updated.
-                    
-                    Try updating Google Play Services.""";
-            case IntegrityErrorCode.PLAY_STORE_ACCOUNT_NOT_FOUND -> """
-                    No Play Store account is found on device.
-                    
-                    Try logging into Play Store.""";
-            case IntegrityErrorCode.PLAY_STORE_NOT_FOUND -> """
-                    No Play Store app is found on device or not official version is installed.
-                    
-                    This app can't work without Play Store.""";
-            case IntegrityErrorCode.PLAY_STORE_VERSION_OUTDATED -> """
-                    The Play Store needs to be updated.
-                    
-                    Try updating Google Play Store.""";
-            case IntegrityErrorCode.TOO_MANY_REQUESTS -> """
-                    Google sets a daily limit of checks on all apps that use the Integrity API. That limit has been reached for today.
-                    
-                    Try again at midnight (12:00am PT).""";
-            default -> "Unknown Error";
-        };
+        String errorSolution = getErrorSolution(errorCode);
+        if (!errorSolution.isEmpty()) {
+            errorMessageBuilder.append("\n\n");
+            errorMessageBuilder.append(errorSolution);
+        }
+
+        return errorMessageBuilder.toString();
     }
 
     // Menu stuff

@@ -23,4 +23,43 @@
     <string name="new_checks">Legacy Response (&lt;A13)</string>
     <string name="copy_json">Copy JSON</string>
     <string name="copied">Copied to clipboard!</string>
+    <string name="token_error_title">Integrity API Error</string>
+    <string name="server_api_error_title">Server API Request Error</string>
+    <string name="server_api_error_status_code">API returned: %d</string>
+    <string name="server_api_error_empty_res">Empty Response</string>
+
+    <!-- ERROR REASONS (from Google's docs) -->
+    <string name="error_reason_api_not_available">Integrity API is not available.</string>
+    <string name="error_reason_app_not_installed">The calling app is not installed.</string>
+    <string name="error_reason_app_uid_mismatch">The calling app UID (user id) does not match the one from Package Manager.</string>
+    <string name="error_reason_cannot_bind_to_service">Binding to the service in the Play Store has failed. This can be due to having an old Play Store version installed on the device.</string>
+    <string name="error_reason_client_transient_error">There was a transient error in the client device.</string>
+    <string name="error_reason_cloud_project_number_is_invalid">The provided cloud project number is invalid.</string>
+    <string name="error_reason_google_server_unavailable">Unknown internal Google server error.</string>
+    <string name="error_reason_internal_error">Unknown internal error.</string>
+    <string name="error_reason_network_error">No available network is found.</string>
+    <string name="error_reason_nonce_is_not_base64">Nonce is not encoded as a base64 web-safe no-wrap string.</string>
+    <string name="error_reason_nonce_too_long">Nonce length is too long. The nonce must be less than 500 bytes before base64 encoding.</string>
+    <string name="error_reason_nonce_too_short"> Nonce length is too short. The nonce must be a minimum of 16 bytes (before base64 encoding) to allow for a better security.</string>
+    <string name="error_reason_play_services_not_found">Play Services is not available or version is too old.</string>
+    <string name="error_reason_play_services_outdated">Play Services needs to be updated.</string>
+    <string name="error_reason_play_store_account_not_found">No Play Store account is found on device.</string>
+    <string name="error_reason_play_store_not_found">No Play Store app is found on device or not official version is installed.</string>
+    <string name="error_reason_play_store_version_outdated">The Play Store needs to be updated.</string>
+    <string name="error_reason_too_many_requests">The calling app is making too many requests to the API and hence is throttled.</string>
+    <string name="error_reason_unknown">Unknown error.</string>
+
+    <!-- ERROR SOLUTIONS (based on Google's docs -->
+    <string name="error_solution_update_play_store">Try updating Play Store.</string>
+    <string name="error_solution_something_wrong_attack">Something is wrong (possibly an attack).</string>
+    <string name="error_solution_try_again">Try again.</string>
+    <string name="error_solution_open_issue">If this happens consistently, open an issue on Github.</string>
+    <string name="error_solution_check_connection">Check your connection.</string>
+    <string name="error_solution_install_update_play_services">Try installing/updating Google Play Services.</string>
+    <string name="error_solution_update_play_services">Try updating Google Play Services.</string>
+    <string name="error_solution_login">Try logging in to Play Store.</string>
+    <string name="error_solution_install_official_play_store">Try installing an official and recent version of Play Store.</string>
+    <string name="error_solution_try_again_later">Try again later.</string>
+
+
 </resources>
