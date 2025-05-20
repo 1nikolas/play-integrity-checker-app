@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,7 +29,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.play.core.integrity.IntegrityManager;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
 import com.google.android.play.core.integrity.IntegrityServiceException;
@@ -57,16 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private ImageView deviceIntegrityIcon;
     private ImageView basicIntegrityIcon;
     private ImageView strongIntegrityIcon;
-
     private ImageView virtualIntegrityIcon;
-    private TextView virtualIntegrityText;
 
-    private Group legacyLayout;
-    private SwitchMaterial legacySwitch;
+    private Group virtualIntegrity;
 
     private String jsonResponse;
     private Integer[] integrityState = {-1, -1, -1, -1};
-    private Integer[] legacyIntegrityState = {-1, -1, -1, -1};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,39 +90,19 @@ public class MainActivity extends AppCompatActivity {
         basicIntegrityIcon = findViewById(R.id.basic_integrity_icon);
         deviceIntegrityIcon = findViewById(R.id.device_integrity_icon);
         strongIntegrityIcon = findViewById(R.id.strong_integrity_icon);
-
         virtualIntegrityIcon = findViewById(R.id.virtual_integrity_icon);
-        virtualIntegrityText = findViewById(R.id.virtual_integrity_text);
 
-        legacyLayout = findViewById(R.id.legacy_row);
-        legacySwitch = findViewById(R.id.legacy_switch);
-
+        virtualIntegrity = findViewById(R.id.virtual_integrity);
 
         btn.setOnClickListener(view -> {
             toggleButtonLoading(true);
 
             jsonResponse = null;
-            legacyLayout.setVisibility(View.GONE);
-
             integrityState = new Integer[]{-1, -1, -1, -1};
-            legacyIntegrityState = new Integer[]{-1, -1, -1, -1};
-
             setIcons(integrityState);
 
             getToken();
         });
-
-        legacySwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
-            if (checked) {
-                setIcons(integrityState);
-            } else {
-                setIcons(legacyIntegrityState);
-            }
-        });
-
-
-        ImageView newChecksInfo = findViewById(R.id.new_checks_info);
-        newChecksInfo.setOnClickListener(view -> Utils.openLink(getString(R.string.new_checks_info), MainActivity.this));
     }
 
     private void getToken() {
@@ -221,42 +195,14 @@ public class MainActivity extends AppCompatActivity {
             result = new JSONObject();
         }
 
-        if (!hasCurrent(result) && noLegacy(result)) {
-            integrityState = parseValues("");
-            legacyIntegrityState = parseValues("");
-
-            runOnUiThread(() -> {
-                setIcons(legacyIntegrityState);
-                legacyLayout.setVisibility(View.VISIBLE);
-                legacySwitch.setChecked(false);
-            });
-        } else if (noLegacy(result)) {
+        if (result.has("deviceRecognitionVerdict")) {
             integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
-            legacyIntegrityState = parseValues("");
 
-            runOnUiThread(() -> {
-                setIcons(integrityState);
-                legacyLayout.setVisibility(View.GONE);
-            });
-        } else if (hasCurrent(result)) {
-            integrityState = parseValues(result.get("deviceRecognitionVerdict").toString());
-            legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
-
-            runOnUiThread(() -> {
-                setIcons(legacyIntegrityState);
-                legacyLayout.setVisibility(View.VISIBLE);
-                legacySwitch.setChecked(false);
-            });
         } else {
             integrityState = parseValues("");
-            legacyIntegrityState = parseValues(result.get("legacyDeviceRecognitionVerdict").toString());
-
-            runOnUiThread(() -> {
-                setIcons(legacyIntegrityState);
-                legacyLayout.setVisibility(View.VISIBLE);
-                legacySwitch.setChecked(false);
-            });
         }
+
+        runOnUiThread(() -> setIcons(integrityState));
 
         runOnUiThread(() -> toggleButtonLoading(false));
     }
@@ -316,14 +262,6 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    private boolean noLegacy(JSONObject deviceIntegrity) {
-        return !deviceIntegrity.has("legacyDeviceRecognitionVerdict");
-    }
-
-    private boolean hasCurrent(JSONObject deviceIntegrity) {
-        return deviceIntegrity.has("deviceRecognitionVerdict");
-    }
-
     private Integer[] parseValues(String integrity) {
         return new Integer[]{integrity.contains("MEETS_BASIC_INTEGRITY") ? 1 : 0, integrity.contains("MEETS_DEVICE_INTEGRITY") ? 1 : 0, integrity.contains("MEETS_STRONG_INTEGRITY") ? 1 : 0, integrity.contains("MEETS_VIRTUAL_INTEGRITY") ? 1 : -1};
     }
@@ -336,15 +274,10 @@ public class MainActivity extends AppCompatActivity {
         setIcon(virtualIntegrityIcon, integrityState[3]);
 
         if (integrityState[3] != -1) {
-            setVirtualIntegrityVisibility(View.VISIBLE);
+            virtualIntegrity.setVisibility(View.VISIBLE);
         } else {
-            setVirtualIntegrityVisibility(View.GONE);
+            virtualIntegrity.setVisibility(View.GONE);
         }
-    }
-
-    private void setVirtualIntegrityVisibility(int visibility) {
-        virtualIntegrityIcon.setVisibility(visibility);
-        virtualIntegrityText.setVisibility(visibility);
     }
 
     private void setIcon(ImageView img, int state) {

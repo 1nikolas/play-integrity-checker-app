@@ -18,9 +18,6 @@
     <string name="check_first">Please run a check first!</string>
     <string name="show_documentation">Learn what the results mean</string>
     <string name="docs_link">https://developer.android.com/google/play/integrity/verdicts#optional-device-labels</string>
-    <string name="new_checks_info">https://developer.android.com/google/play/integrity/improvements</string>
-    <string name="legacy_checks">Legacy Response (Temporary)</string>
-    <string name="new_checks">Legacy Response (&lt;A13)</string>
     <string name="copy_json">Copy JSON</string>
     <string name="copied">Copied to clipboard!</string>
     <string name="token_error_title">Integrity API Error</string>
