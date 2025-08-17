@@ -8,8 +8,8 @@ android {
         applicationId "gr.nikolasspyr.integritycheck"
 
         minSdkVersion 21
-        targetSdkVersion 35
-        compileSdk 35
+        targetSdkVersion 36
+        compileSdk = 36
 
         versionCode 21
         versionName "2.1"
@@ -23,14 +23,14 @@ android {
     }
 
     buildFeatures {
-        dataBinding true
-        buildConfig true
+        dataBinding = true
+        buildConfig = true
     }
 
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -38,19 +38,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    namespace 'gr.nikolasspyr.integritycheck'
+    namespace = 'gr.nikolasspyr.integritycheck'
 
 }
 
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
     implementation 'com.google.android.play:integrity:1.4.0'
 
