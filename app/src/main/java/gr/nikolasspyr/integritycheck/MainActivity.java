@@ -13,9 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.Group;
@@ -434,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
             if (jsonResponse == null) {
                 Toast.makeText(this, R.string.check_first, Toast.LENGTH_SHORT).show();
             } else {
-                new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
+                AlertDialog dialog = new MaterialAlertDialogBuilder(MainActivity.this, R.style.Theme_PlayIntegrityAPIChecker_Dialogs)
                         .setTitle(R.string.json_response)
                         .setCancelable(true)
                         .setPositiveButton(R.string.ok, null)
@@ -445,8 +447,16 @@ public class MainActivity extends AppCompatActivity {
                             dialogInterface.dismiss();
                             Toast.makeText(MainActivity.this, getString(R.string.copied), Toast.LENGTH_SHORT).show();
                         })
-                        .setMessage(jsonResponse)
+                        .setView(R.layout.dialog_response)
                         .show();
+
+                TextView text = dialog.findViewById(R.id.message);
+                if (text == null) {
+                    dialog.dismiss();
+                    return true;
+                }
+
+                text.setText(jsonResponse);
             }
             return true;
         } else if (id == R.id.documentation) {
