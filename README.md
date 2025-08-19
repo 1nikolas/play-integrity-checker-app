@@ -8,6 +8,8 @@ Get info about your Device Integrity through the Play Integrity API
      alt="Get it on Google Play"
      height="80">](https://play.google.com/store/apps/details?id=gr.nikolasspyr.integritycheck)
 
+> [!WARNING]
+> If you don't install the app from Play Store and sideload it, you might not get the `MEETS_BASIC_INTEGRITY` and `MEETS_STRONG_INTEGRITY` results.
 
 > [!WARNING]
 > If you want to implement the Play Integrity API in your app you shouldn't do it this way. The API server should not send the whole JSON to the app, only a yes/no. Also ideally you should pair the integrity request with another one (for example login). That way your API won't let the user proceed without a valid Integrity token that passes integrity checks (even if your app is reverse engineered).
