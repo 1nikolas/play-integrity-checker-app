@@ -1,0 +1,54 @@
+<resources>
+  <string name="error">Błąd</string>
+  <string name="ok">OK</string>
+  <string name="check">Sprawdź</string>
+  <string name="licenses">Licencje</string>
+  <string name="about_text">Wykonane przez Nikolas Spiridakis\nWersja: %s (%d)</string>
+  <string name="about">O aplikacji</string>
+  <string name="no_browser_found">Nie znaleziono przeglądarki!</string>
+  <string name="status_unknown">Nieznany</string>
+  <string name="status_pass">Przechodzi</string>
+  <string name="status_fail">Nie przechodzi</string>
+  <string name="show_json_response">Pokaż odpowiedź JSON</string>
+  <string name="json_response">Surowa odpowiedź JSON</string>
+  <string name="check_first">Najpierw sprawdź!</string>
+  <string name="show_documentation">Dowiedz się, co oznaczają wyniki</string>
+  <string name="docs_link">https://developer.android.com/google/play/integrity/verdicts?hl=pl#optional-device-labels</string>
+  <string name="copy_json">Skopiuj JSON</string>
+  <string name="copied">Skopiowano do schowka!</string>
+  <string name="token_error_title">Błąd API Integrity</string>
+  <string name="server_api_error_title">Błąd żądania serwera API</string>
+  <string name="server_api_error_status_code">API zwróciło: %d</string>
+  <string name="server_api_error_empty_res">Pusta odpowiedź</string>
+  <!-- PRZYCZYNY BŁĘDÓW (z dokumentów Google)-->
+  <string name="error_reason_api_not_available">Interfejs API Integrity jest niedostępny.</string>
+  <string name="error_reason_app_not_installed">Aplikacja wywołująca nie jest zainstalowana.</string>
+  <string name="error_reason_app_uid_mismatch">Identyfikator użytkownika (UID) aplikacji wywołującej nie zgadza się z identyfikatorem z menedżera pakietów.</string>
+  <string name="error_reason_cannot_bind_to_service">Połączenie z usługą w Sklepie Google Play nie powiodło się. Przyczyną może być zainstalowana na urządzeniu starsza wersja Sklepu Google Play.</string>
+  <string name="error_reason_client_transient_error">Wystąpił przejściowy błąd na urządzeniu klienckim.</string>
+  <string name="error_reason_cloud_project_number_is_invalid">Podany numer projektu w chmurze jest nieprawidłowy.</string>
+  <string name="error_reason_google_server_unavailable">Nieznany wewnętrzny błąd serwera Google.</string>
+  <string name="error_reason_internal_error">Nieznany błąd wewnętrzny.</string>
+  <string name="error_reason_network_error">Nie znaleziono dostępnej sieci.</string>
+  <string name="error_reason_nonce_is_not_base64">Nonce nie jest kodowany jako bezpieczny dla sieci ciąg znaków base64 bez zawijania.</string>
+  <string name="error_reason_nonce_too_long">Długość nonce jest zbyt duża. Nonce musi mieć mniej niż 500 bajtów przed kodowaniem Base64.</string>
+  <string name="error_reason_nonce_too_short">Długość nonce jest zbyt krótka. Nonce musi mieć co najmniej 16 bajtów (przed kodowaniem Base64), aby zapewnić lepsze bezpieczeństwo.</string>
+  <string name="error_reason_play_services_not_found">Usługi Play są niedostępne lub ich wersja jest zbyt stara.</string>
+  <string name="error_reason_play_services_outdated">Usługi Google Play wymagają aktualizacji.</string>
+  <string name="error_reason_play_store_account_not_found">Na urządzeniu nie znaleziono konta Sklepu Google Play.</string>
+  <string name="error_reason_play_store_not_found">Nie znaleziono Sklepu Google Play na urządzeniu lub zainstalowano wersję nieoficjalną.</string>
+  <string name="error_reason_play_store_version_outdated">Sklep Google Play wymaga aktualizacji.</string>
+  <string name="error_reason_too_many_requests">Aplikacja wywołująca wysyła zbyt wiele żądań do interfejsu API, co powoduje ograniczenie przepustowości.</string>
+  <string name="error_reason_unknown">Nieznany błąd.</string>
+  <!-- ROZWIĄZANIA BŁĘDÓW (na podstawie dokumentów Google)-->
+  <string name="error_solution_update_play_store">Spróbuj zaktualizować Sklep Google Play.</string>
+  <string name="error_solution_something_wrong_attack">Coś jest nie tak (możliwe, że to atak).</string>
+  <string name="error_solution_try_again">Spróbuj ponownie.</string>
+  <string name="error_solution_open_issue">Jeśli zdarza się to regularnie, zgłoś to zdarzenie na Github.</string>
+  <string name="error_solution_check_connection">Sprawdź połączenie.</string>
+  <string name="error_solution_install_update_play_services">Spróbuj zainstalować/zaktualizować Usługi Google Play.</string>
+  <string name="error_solution_update_play_services">Spróbuj zaktualizować Usługi Google Play.</string>
+  <string name="error_solution_login">Spróbuj zalogować się do Sklepu Google Play.</string>
+  <string name="error_solution_install_official_play_store">Spróbuj zainstalować oficjalną i najnowszą wersję Sklepu Google Play.</string>
+  <string name="error_solution_try_again_later">Spróbuj ponownie później.</string>
+</resources>
