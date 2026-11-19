@@ -1,0 +1,58 @@
+<resources>
+    <string name="error">Erro</string>
+    <string name="ok">OK</string>
+    <string name="check">Verificar</string>
+    <string name="licenses">Licenças</string>
+    <string name="about_text">Feito por Nikolas Spiridakis\nVersão: %s (%d)</string>
+    <string name="about">Sobre</string>
+    <string name="no_browser_found">Nenhum navegador encontrado!</string>
+    <string name="status_unknown">Desconhecido</string>
+    <string name="status_pass">Aprovado</string>
+    <string name="status_fail">Reprovado</string>
+    <string name="show_json_response">Mostrar resposta JSON</string>
+    <string name="json_response">Resposta JSON bruta</string>
+    <string name="check_first">Execute uma verificação primeiro!</string>
+    <string name="show_documentation">Saiba o que os resultados significam</string>
+    <string name="docs_link">https://developer.android.com/google/play/integrity/verdicts#optional-device-labels</string>
+    <string name="copy_json">Copiar JSON</string>
+    <string name="copied">Copiado para a área de transferência!</string>
+    <string name="token_error_title">Erro da Integrity API</string>
+    <string name="server_api_error_title">Erro na requisição da API do servidor</string>
+    <string name="server_api_error_status_code">A API retornou: %d</string>
+    <string name="server_api_error_empty_res">Resposta vazia</string>
+
+    <!-- ERROR REASONS (from Google's docs) -->
+    <string name="error_reason_api_not_available">A Integrity API não está disponível.</string>
+    <string name="error_reason_app_not_installed">O app que fez a chamada não está instalado.</string>
+    <string name="error_reason_app_uid_mismatch">O UID (id de usuário) do app que fez a chamada não corresponde ao do Gerenciador de Pacotes.</string>
+    <string name="error_reason_cannot_bind_to_service">A vinculação ao serviço na Play Store falhou. Isso pode ocorrer por haver uma versão antiga da Play Store instalada no dispositivo.</string>
+    <string name="error_reason_client_transient_error">Houve um erro temporário no dispositivo cliente.</string>
+    <string name="error_reason_cloud_project_number_is_invalid">O número do projeto na nuvem fornecido é inválido.</string>
+    <string name="error_reason_google_server_unavailable">Erro interno desconhecido do servidor do Google.</string>
+    <string name="error_reason_internal_error">Erro interno desconhecido.</string>
+    <string name="error_reason_network_error">Nenhuma rede disponível foi encontrada.</string>
+    <string name="error_reason_nonce_is_not_base64">O nonce não está codificado como uma string base64 web-safe e sem quebras.</string>
+    <string name="error_reason_nonce_too_long">O comprimento do nonce é muito longo. O nonce deve ter menos de 500 bytes antes da codificação base64.</string>
+    <string name="error_reason_nonce_too_short"> O comprimento do nonce é muito curto. O nonce deve ter no mínimo 16 bytes (antes da codificação base64) para permitir uma segurança melhor.</string>
+    <string name="error_reason_play_services_not_found">O Play Services não está disponível ou a versão é muito antiga.</string>
+    <string name="error_reason_play_services_outdated">O Play Services precisa ser atualizado.</string>
+    <string name="error_reason_play_store_account_not_found">Nenhuma conta da Play Store foi encontrada no dispositivo.</string>
+    <string name="error_reason_play_store_not_found">Nenhum app da Play Store foi encontrado no dispositivo ou não há uma versão oficial instalada.</string>
+    <string name="error_reason_play_store_version_outdated">A Play Store precisa ser atualizada.</string>
+    <string name="error_reason_too_many_requests">O app que fez a chamada está fazendo requisições demais à API e, por isso, está sendo limitado.</string>
+    <string name="error_reason_unknown">Erro desconhecido.</string>
+
+    <!-- ERROR SOLUTIONS (based on Google's docs -->
+    <string name="error_solution_update_play_store">Tente atualizar a Play Store.</string>
+    <string name="error_solution_something_wrong_attack">Algo está errado (possivelmente um ataque).</string>
+    <string name="error_solution_try_again">Tente novamente.</string>
+    <string name="error_solution_open_issue">Se isso acontecer com frequência, abra uma issue no Github.</string>
+    <string name="error_solution_check_connection">Verifique sua conexão.</string>
+    <string name="error_solution_install_update_play_services">Tente instalar/atualizar o Google Play Services.</string>
+    <string name="error_solution_update_play_services">Tente atualizar o Google Play Services.</string>
+    <string name="error_solution_login">Tente fazer login na Play Store.</string>
+    <string name="error_solution_install_official_play_store">Tente instalar uma versão oficial e recente da Play Store.</string>
+    <string name="error_solution_try_again_later">Tente novamente mais tarde.</string>
+
+
+</resources>
